@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jealousy: A Disease Protocol - Emotional Diagnostic Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c; /* Even darker base */
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a; /* Slightly lighter for panel */
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4; /* Cyan */
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c; /* Still a strong red for danger/manipulation */
+            --glow-red: #ff0055;
+            --glow-blue: #00ffff; /* Neon Blue */
+            --glow-purple: #ff00ff; /* Magenta */
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3); /* Subtle grid */
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px; /* Constrain header width */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red); /* Jealousy's primary glow color */
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Flowchart left (larger), Diagnosis Log right */
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px; /* Dashboard overall width */
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1); /* Red glow for theme */
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative; /* For nested absolute elements */
+        }
+
+        #flowchart-panel {
+            min-height: 750px; /* Fixed height for flowchart area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #diagnosis-log-panel {
+            min-height: 750px; /* Match flowchart height */
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #diagnosis-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #diagnosis-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto; /* Allow scrolling for long descriptions */
+            flex-grow: 1; /* Take up available space */
+            padding-right: 5px; /* For scrollbar not to cover text */
+        }
+        #diagnosis-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #diagnosis-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #diagnosis-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #diagnosis-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg path,
+        .flow-box.highlight .box-icon svg circle,
+        .flow-box.highlight .box-icon svg rect,
+        .flow-box.highlight .box-icon svg polygon,
+        .flow-box.highlight .box-icon svg line {
+            fill: var(--glow-red); /* Main highlight color for icons */
+        }
+        .flow-box.highlight .box-icon svg .stroke-element {
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. Initial Exposure / Symptom Onset: Heart crack */
+        @keyframes heartCrack {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .flow-box.highlight #heart-base { animation: heartPulse 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #heart-crack { animation: heartCrack 1.5s ease-out forwards; }
+        #heart-crack { stroke-dasharray: 0 100; opacity: 0; }
+
+        /* 2. Incubation / Rumination: Swirling thoughts getting darker */
+        @keyframes thoughtSwirl {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes thoughtDarken {
+            0%, 100% { fill: var(--text-medium); }
+            50% { fill: var(--glow-red); }
+        }
+        .flow-box.highlight #thought-swirl-path { animation: thoughtSwirl 3s linear infinite; }
+        .flow-box.highlight #thought-main { animation: thoughtDarken 2s ease-in-out infinite alternate; }
+
+        /* 3. Early Stage / Distorted Perception: Glitching lens */
+        @keyframes lensGlow {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--glow-red)); }
+            50% { filter: drop-shadow(0 0 5px var(--glow-red)); }
+        }
+        @keyframes lensDistort {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05) translateX(2px); }
+        }
+        .flow-box.highlight #lens-glitch { animation: lensGlow 1.5s ease-in-out infinite alternate, lensDistort 1s ease-in-out infinite alternate; }
+
+        /* 4. Progression / Emotional Deterioration: Dropping teardrop, color change */
+        @keyframes tearDrop {
+            0% { transform: translateY(-10px); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+        @keyframes emotionPulse {
+            0%, 100% { fill: var(--text-medium); }
+            50% { fill: var(--glow-red); }
+        }
+        .flow-box.highlight #tear-drop { animation: tearDrop 2s ease-out infinite; }
+        .flow-box.highlight #face-emotion { animation: emotionPulse 2s ease-in-out infinite alternate; }
+        #tear-drop { opacity: 0; }
+
+        /* 5. Acute Phase / Obsessive Monitoring: Eye scan line */
+        @keyframes eyeScan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .flow-box.highlight #eye-scan-line { animation: eyeScan 1.5s linear infinite; }
+        #eye-scan-line { opacity: 0; }
+
+        /* 6. Manifestation / Destructive Behavior: Shattering glass */
+        @keyframes glassShatter {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0; transform: scale(0.8) rotate(10deg); }
+        }
+        @keyframes crackEffect {
+            0% { stroke-dasharray: 0 100; }
+            100% { stroke-dasharray: 100 0; }
+        }
+        .flow-box.highlight #shattering-glass { animation: glassShatter 1.5s ease-out forwards; }
+        .flow-box.highlight #glass-crack { animation: crackEffect 1s ease-out forwards; }
+
+        /* 7. Contagion / Impact on Others: Broken chain links */
+        @keyframes linkBreak {
+            0% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(-5px) rotate(10deg); opacity: 0.5; }
+            100% { transform: translateY(10px) rotate(-10deg); opacity: 0; }
+        }
+        .flow-box.highlight #chain-link-1 { animation: linkBreak 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #chain-link-2 { animation: linkBreak 1.5s 0.3s ease-in-out infinite alternate; }
+        #chain-link-1, #chain-link-2 { opacity: 1; }
+
+        /* 8. Crisis Point / Reckoning: Flashing warning sign */
+        @keyframes warningFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        @keyframes pulseBorder {
+            0%, 100% { stroke: var(--glow-red); }
+            50% { stroke: var(--glow-blue); }
+        }
+        .flow-box.highlight #warning-triangle { animation: warningFlash 1s ease-in-out infinite alternate; }
+        .flow-box.highlight #warning-exclamation { animation: pulseBorder 1.5s ease-in-out infinite alternate; }
+
+        /* 9. Outcome / Prognosis: Healing heart vs. Isolated figure */
+        @keyframes heartHeal {
+            0% { stroke-dasharray: 100 0; }
+            100% { stroke-dasharray: 0 100; }
+        }
+        @keyframes heartHealGlow {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--accent-green)); }
+            50% { filter: drop-shadow(0 0 5px var(--accent-green)); }
+        }
+        @keyframes isolationFade {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+        .flow-box.highlight #healing-heart-path { animation: heartHeal 2s ease-out forwards; }
+        .flow-box.highlight #healing-heart-group { animation: heartHealGlow 2s ease-in-out infinite alternate 2s; }
+        .flow-box.highlight #isolated-figure { animation: isolationFade 2.5s ease-in-out infinite alternate; }
+        #healing-heart-path { stroke-dasharray: 100 0; } /* Starts healed */
+    
+
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center controls */
+            gap: 20px;
+            margin-top: 0; /* Already margin on dashboard-main */
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>JEALOUSY: A DISEASE PROTOCOL</h1>
+        <p class="subtitle">EMOTIONAL DIAGNOSTIC DASHBOARD: MONITORING THE SPREAD OF DESTRUCTIVE EMOTIONS</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="heart-base" d="M50 85 C20 70, 20 40, 50 15 C80 40, 80 70, 50 85 Z" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="heart-crack" d="M50 30 L45 40 L55 50 L50 60 L40 70" fill="none" class="stroke-element" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INITIAL EXPOSURE / SYMPTOM ONSET</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="thought-main" cx="50" cy="50" r="35" fill="#2a2a4a"/>
+                            <path id="thought-swirl-path" d="M50 15 A35 35 0 0 0 15 50 A35 35 0 0 0 50 85 A35 35 0 0 0 85 50 A35 35 0 0 0 50 15 Z" fill="none" class="stroke-element"/>
+                            <circle cx="50" cy="50" r="10" fill="#1a1a2e"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INCUBATION / RUMINATION</div>
+                    <div class="small-text">[SEED OF DOUBT]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="lens-glitch" d="M25 25 L75 25 L75 75 L25 75 Z" fill="var(--bg-dark)" opacity="0.8"/>
+                            <line x1="20" y1="20" x2="80" y2="80" class="stroke-element"/>
+                            <line x1="80" y1="20" x2="20" y2="80" class="stroke-element"/>
+                            <circle cx="50" cy="50" r="10" class="stroke-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">EARLY STAGE / DISTORTED PERCEPTION</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="40" r="20" id="face-emotion"/>
+                            <path d="M30 70 Q50 85 70 70 L60 60 Q50 65 40 60 Z" fill="#2a2a4a"/>
+                            <circle id="tear-drop" cx="60" cy="55" r="5" fill="var(--glow-blue)" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">PROGRESSION / EMOTIONAL DETERIORATION</div>
+                    <div class="small-text">[ESCALATING ANXIETY]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#2a2a4a" class="stroke-element"/>
+                            <circle cx="50" cy="50" r="10" fill="#1a1a2e"/>
+                            <rect id="eye-scan-line" x="15" y="45" width="70" height="10" fill="var(--glow-red)" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">ACUTE PHASE / OBSESSIVE MONITORING</div>
+                    <div class="small-text">[SURVEILLANCE PROTOCOL]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <g id="shattering-glass">
+                                <rect x="20" y="20" width="60" height="60" fill="#2a2a4a"/>
+                                <line id="glass-crack" x1="20" y1="20" x2="80" y2="80" fill="none" class="stroke-element" stroke-width="2"/>
+                                <line x1="80" y1="20" x2="20" y2="80" fill="none" class="stroke-element" stroke-width="2"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="box-text">MANIFESTATION / DESTRUCTIVE BEHAVIOR</div>
+                    <div class="small-text">[ERUPTION]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" rx="5"/>
+                            <line x1="30" y1="30" x2="70" y2="70" class="stroke-element"/>
+                            <line x1="70" y1="30" x2="30" y2="70" class="stroke-element"/>
+                            <circle id="chain-link-1" cx="35" cy="35" r="10" class="stroke-element"/>
+                            <circle id="chain-link-2" cx="65" cy="65" r="10" class="stroke-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">CONTAGION / IMPACT ON OTHERS</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <polygon id="warning-triangle" points="50 15, 85 85, 15 85" fill="#2a2a4a" class="stroke-element"/>
+                            <text id="warning-exclamation" x="50" y="60" font-size="40" text-anchor="middle" fill="var(--glow-red)">!</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">CRISIS POINT / RECKONING</div>
+                    <div class="small-text">[INTERVENTION TRIGGER]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <g id="healing-heart-group">
+                                <path id="healing-heart-path" d="M50 85 C20 70, 20 40, 50 15 C80 40, 80 70, 50 85 Z" fill="#2a2a4a" class="stroke-element"/>
+                                <path d="M40 50 Q50 40 60 50" fill="none" class="stroke-element" stroke-width="2"/>
+                            </g>
+                            <g id="isolated-figure" transform="translate(60, -10)" scale="0.5">
+                                <circle cx="50" cy="40" r="15" fill="#2a2a4a"/>
+                                <path d="M25 75 C25 60, 75 60, 75 75 L75 90 L25 90 Z" fill="#2a2a4a"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="box-text">OUTCOME / PROGNOSIS</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="diagnosis-log-panel" class="dashboard-panel">
+            <h2>DIAGNOSIS LOG</h2>
+            <div id="diagnosis-log-text">
+                <p>Welcome to the Emotional Diagnostic Dashboard for Jealousy. This system maps the progression of jealousy as a complex emotional disease.</p>
+                <p>Use the navigation controls below to observe each stage, from initial infection to potential outcomes.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: INITIAL EXPOSURE / SYMPTOM ONSET</h2><p><strong>DIAGNOSIS:</strong> The first perception of a threat to a valued relationship or status. This often presents as a subtle unease, a flicker of suspicion, or a fleeting pang of fear.</p><p><strong>INDICATORS:</strong> Sudden insecurity, comparison to others, overthinking a small interaction, a sense of inadequacy triggered by external events.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: INCUBATION / RUMINATION</h2><p><strong>DIAGNOSIS:</strong> The initial trigger festers. Thoughts become obsessive, replaying scenarios, searching for "evidence," and constructing narratives that confirm suspicion. This stage is marked by mental preoccupation.</p><p><strong>INDICATORS:</strong> Constant re-evaluation of past events, difficulty concentrating, intrusive thoughts, compulsive social media checking, heightened sensitivity to perceived slights.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: EARLY STAGE / DISTORTED PERCEPTION</h2><p><strong>DIAGNOSIS:</strong> Reality becomes warped through the lens of jealousy. Innocent actions are misinterpreted, perceived threats are amplified, and paranoia begins to set in, creating a self-reinforcing cycle.</p><p><strong>INDICATORS:</strong> Assigning negative intent to neutral actions, confirmation bias, distrust of previously trusted individuals, emotional overreactions to minor stimuli.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: PROGRESSION / EMOTIONAL DETERIORATION</h2><p><strong>DIAGNOSIS:</strong> The emotional landscape darkens significantly. Intense feelings of anger, resentment, anxiety, and sadness become prominent and sustained. The individual experiences significant distress.</p><p><strong>INDICATORS:</strong> Persistent irritability, mood swings, withdrawal from activities, physical symptoms like headaches or digestive issues, a pervasive sense of unhappiness.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: ACUTE PHASE / OBSESSIVE MONITORING</h2><p><strong>DIAGNOSIS:</strong> Jealousy translates into active, often controlling, behaviors. This can include incessant questioning, "testing" the loyalty of others, surveillance (digital or physical), and attempts to restrict freedom.</p><p><strong>INDICATORS:</strong> Repeated interrogations, checking phones/messages, demands for constant reassurance, isolation of the perceived threat, manipulative tactics to assert control.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: MANIFESTATION / DESTRUCTIVE BEHAVIOR</h2><p><strong>DIAGNOSIS:</strong> The "disease" erupts into overt, destructive actions. This can involve baseless accusations, public outbursts, sabotage of relationships, or direct confrontation fueled by intense emotion.</p><p><strong>INDICATORS:</strong> Violent arguments, verbal abuse, public humiliation of others, deliberate damage to relationships or reputation, extreme emotional volatility.</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: CONTAGION / IMPACT ON OTHERS</h2><p><strong>DIAGNOSIS:</strong> The destructive effects of jealousy spread beyond the individual. Relationships are strained or broken, trust erodes, and friends or family may become alienated or drawn into the drama.</p><p><strong>INDICATORS:</strong> Withdrawal of affection by others, loss of friendships, family disputes, an atmosphere of tension and fear, social isolation of the jealous individual.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: CRISIS POINT / RECKONING</h2><p><strong>DIAGNOSIS:</strong> A critical juncture where the consequences of the jealousy become undeniable. This might be a final confrontation, an ultimatum, a loss of a significant relationship, or a moment of painful self-awareness.</p><p><strong>INDICATORS:</strong> End of a relationship, significant legal or social repercussions, deep personal despair, realization of the extent of damage caused, seeking professional help.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: OUTCOME / PROGNOSIS</h2><p><strong>DIAGNOSIS:</strong> The resolution stage. Depending on intervention and personal choices, this can lead to recovery and growth (learning to manage jealousy) or irreversible damage, isolation, and continued suffering.</p><p><strong>INDICATORS:</strong> (Positive) Self-reflection, therapy, rebuilt trust, healthier relationships. (Negative) Permanent estrangement, chronic resentment, deeper psychological issues, repeated cycles of destructive behavior.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const diagnosisLogText = document.getElementById('diagnosis-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = '';
+                el.style.filter = '';
+                el.style.transform = '';
+            });
+
+            // Specific opacity/visibility resets for elements that are hidden by default or fade in
+            document.getElementById('heart-crack').style.opacity = 0;
+            document.getElementById('heart-crack').style.strokeDasharray = '0 100'; // Reset crack to invisible
+            document.getElementById('tear-drop').style.opacity = 0;
+            document.getElementById('eye-scan-line').style.opacity = 0;
+            document.getElementById('shattering-glass').style.opacity = 1; // Default visible
+            document.getElementById('shattering-glass').style.transform = ''; // Clear transform
+            document.getElementById('glass-crack').style.strokeDasharray = '0 100'; // Clear crack
+            document.getElementById('chain-link-1').style.opacity = 1;
+            document.getElementById('chain-link-1').style.transform = '';
+            document.getElementById('chain-link-2').style.opacity = 1;
+            document.getElementById('chain-link-2').style.transform = '';
+            document.getElementById('warning-triangle').style.opacity = 1;
+            document.getElementById('healing-heart-path').style.strokeDasharray = '100 0'; // Starts healed
+            document.getElementById('healing-heart-path').style.filter = '';
+            document.getElementById('isolated-figure').style.opacity = 1;
+            document.getElementById('isolated-figure').style.transform = '';
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                diagnosisLogText.innerHTML = '<p>Welcome to the Emotional Diagnostic Dashboard for Jealousy. This system maps the progression of jealousy as a complex emotional disease.</p><p>Use the navigation controls below to observe each stage, from initial infection to potential outcomes.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                diagnosisLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        document.getElementById('heart-crack').style.opacity = 1;
+                        break;
+                    case 'box-2':
+                        // Animation controlled by CSS class highlight
+                        break;
+                    case 'box-3':
+                        // Animation controlled by CSS class highlight
+                        break;
+                    case 'box-4':
+                        document.getElementById('tear-drop').style.opacity = 1;
+                        break;
+                    case 'box-5':
+                        document.getElementById('eye-scan-line').style.opacity = 1;
+                        break;
+                    case 'box-6':
+                        document.getElementById('shattering-glass').style.opacity = 0; // Hide the base element for shatter effect
+                        document.getElementById('glass-crack').style.strokeDasharray = '100 0'; // Show the crack
+                        break;
+                    case 'box-7':
+                        // Animation controlled by CSS class highlight
+                        break;
+                    case 'box-8':
+                        // Animation controlled by CSS class highlight
+                        break;
+                    case 'box-9':
+                        // No specific opacity changes needed here for initial state.
+                        // The animations for healing vs. isolation are always active, fading between them.
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
