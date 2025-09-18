@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Mindset Protocol: Resistance to Change Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c; /* Even darker base */
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a; /* Slightly lighter for panel */
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4; /* Cyan */
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c; /* Still a strong red for danger/manipulation */
+            --glow-red: #ff0055; /* Neon Red - for fixed elements */
+            --glow-blue: #00ffff; /* Neon Blue - for change/dynamic elements */
+            --glow-purple: #ff00ff; /* Magenta */
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3); /* Subtle grid */
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red);
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #flowchart-panel {
+            min-height: 750px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #cognitive-rigidity-log-panel {
+            min-height: 750px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #cognitive-rigidity-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #cognitive-rigidity-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+        #cognitive-rigidity-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #cognitive-rigidity-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #cognitive-rigidity-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #cognitive-rigidity-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg path,
+        .flow-box.highlight .box-icon svg circle,
+        .flow-box.highlight .box-icon svg rect,
+        .flow-box.highlight .box-icon svg polygon,
+        .flow-box.highlight .box-icon svg line {
+            fill: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .stroke-element {
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .change-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. Baseline Belief System: Immovable block pulse */
+        @keyframes blockSolidify {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .flow-box.highlight #baseline-block { animation: blockSolidify 2s ease-in-out infinite alternate; }
+
+        /* 2. Incoming Data / New Ideas: Data stream hitting a wall */
+        @keyframes dataFlow {
+            0% { transform: translateX(-20px); opacity: 0; }
+            50% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(20px); opacity: 0; }
+        }
+        @keyframes wallPulse {
+            0%, 100% { stroke-width: 2px; }
+            50% { stroke-width: 3px; }
+        }
+        .flow-box.highlight #incoming-data-1 { animation: dataFlow 1.5s ease-out infinite; }
+        .flow-box.highlight #incoming-data-2 { animation: dataFlow 1.5s 0.5s ease-out infinite; }
+        .flow-box.highlight #fixed-wall { animation: wallPulse 2s ease-in-out infinite alternate; }
+        #incoming-data-1, #incoming-data-2 { opacity: 0; }
+
+        /* 3. Threat Perception / Comfort Zone: Shield glowing */
+        @keyframes shieldGlow {
+            0%, 100% { filter: drop-shadow(0 0 5px var(--glow-red)); }
+            50% { filter: drop-shadow(0 0 10px var(--glow-red)); }
+        }
+        @keyframes comfortZonePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .flow-box.highlight #comfort-shield { animation: shieldGlow 2s ease-in-out infinite alternate, comfortZonePulse 1.5s ease-in-out infinite alternate; }
+
+        /* 4. Cognitive Filtering / Rejection: X-mark over new idea */
+        @keyframes xMarkAppear {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        @keyframes newIdeaPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .flow-box.highlight #rejection-x { animation: xMarkAppear 1s ease-out forwards; }
+        .flow-box.highlight #new-idea { animation: newIdeaPulse 2s ease-in-out infinite alternate 1s; }
+        #rejection-x { stroke-dasharray: 0 100; opacity: 0; }
+
+        /* 5. Internal Justification / Rationalization: Gear spinning */
+        @keyframes gearSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .flow-box.highlight #rationalization-gear { animation: gearSpin 3s linear infinite; }
+        .flow-box.highlight #fixed-mind-symbol { animation: blockSolidify 2s ease-in-out infinite alternate; } /* Reuse block pulse for mind */
+
+        /* 6. Behavioral Inertia / Status Quo: Wheel stuck, spark */
+        @keyframes wheelAttempt {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+        @keyframes sparkFlicker {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        .flow-box.highlight #stuck-wheel { animation: wheelAttempt 1.5s ease-in-out infinite; }
+        .flow-box.highlight #inertia-spark { animation: sparkFlicker 0.8s ease-in-out infinite; }
+        #inertia-spark { opacity: 0; }
+
+        /* 7. Opportunity Cost / Stagnation: Shrinking/fading growth symbol */
+        @keyframes growthShrink {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.8); opacity: 0.5; }
+        }
+        .flow-box.highlight #stagnation-growth { animation: growthShrink 2s ease-in-out infinite alternate; }
+
+        /* 8. External Pressure / Growing Gap: Moving timeline vs static figure */
+        @keyframes timelineScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-20px); }
+        }
+        @keyframes staticFigureWiggle {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(1px); }
+        }
+        .flow-box.highlight #moving-timeline { animation: timelineScroll 3s linear infinite; }
+        .flow-box.highlight #static-figure { animation: staticFigureWiggle 1s ease-in-out infinite alternate; }
+
+        /* 9. Reinforcement Loop / Deepening Entrenchment: Self-tightening spiral */
+        @keyframes spiralTighten {
+            0%, 100% { stroke-dashoffset: 0; }
+            50% { stroke-dashoffset: 20; }
+        }
+        .flow-box.highlight #entrenchment-spiral {
+            stroke-dasharray: 20 5; /* For dash effect */
+            animation: spiralTighten 2s ease-in-out infinite alternate;
+        }
+
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 0;
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>FIXED MINDSET PROTOCOL: RESISTANCE TO CHANGE ANALYSIS</h1>
+        <p class="subtitle">MAPPING COGNITIVE RIGIDITY AND THE INHIBITION OF GROWTH</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="baseline-block" x="20" y="30" width="60" height="40" fill="#2a2a4a" class="stroke-element"/>
+                            <text x="50" y="55" font-size="12" text-anchor="middle" fill="var(--text-medium)">STATUS QUO</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">BASELINE BELIEF SYSTEM</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="fixed-wall" x="40" y="20" width="20" height="60" fill="#2a2a4a" class="stroke-element"/>
+                            <rect id="incoming-data-1" x="10" y="30" width="20" height="10" fill="var(--glow-blue)" opacity="0" class="change-element"/>
+                            <rect id="incoming-data-2" x="10" y="50" width="20" height="10" fill="var(--glow-blue)" opacity="0" class="change-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INCOMING DATA / NEW IDEAS</div>
+                    <div class="small-text">[EXTERNAL STIMULI]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="comfort-shield" cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element"/>
+                            <path d="M50 35 C40 35, 35 45, 50 45 C65 45, 60 35, 50 35 Z M50 60 Q50 70 50 60 Z" fill="var(--text-medium)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">THREAT PERCEPTION / COMFORT ZONE</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="new-idea" d="M35 40 Q50 30 65 40 Q50 60 35 40 Z" fill="var(--glow-blue)" class="change-element"/>
+                            <line id="rejection-x" x1="30" y1="30" x2="70" y2="70" class="stroke-element" stroke-width="4"/>
+                            <line x1="70" y1="30" x2="30" y2="70" class="stroke-element" stroke-width="4"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">COGNITIVE FILTERING / REJECTION</div>
+                    <div class="small-text">[INFORMATION BLOCKADE]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="fixed-mind-symbol" x="25" y="25" width="50" height="50" fill="#2a2a4a" class="stroke-element"/>
+                            <circle id="rationalization-gear" cx="50" cy="50" r="20" fill="none" class="stroke-element"/>
+                            <line x1="50" y1="30" x2="50" y2="70" class="stroke-element"/>
+                            <line x1="30" y1="50" x2="70" y2="50" class="stroke-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INTERNAL JUSTIFICATION / RATIONALIZATION</div>
+                    <div class="small-text">[DEFENSE MECHANISMS]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="stuck-wheel" cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element"/>
+                            <line x1="50" y1="15" x2="50" y2="85" class="stroke-element"/>
+                            <line x1="15" y1="50" x2="85" y2="50" class="stroke-element"/>
+                            <circle cx="50" cy="50" r="5" fill="var(--glow-red)"/>
+                            <path id="inertia-spark" d="M70 40 L75 35 L80 40 L75 45 Z" fill="var(--glow-blue)" opacity="0" class="change-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">BEHAVIORAL INERTIA / STATUS QUO</div>
+                    <div class="small-text">[RESISTANCE TO ACTION]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M50 80 Q20 60 20 50 L50 20 L80 50 Q80 60 50 80 Z" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="stagnation-growth" d="M50 70 Q30 55 30 45 L50 30 L70 45 Q70 55 50 70 Z" fill="var(--text-medium)" class="stroke-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">OPPORTUNITY COST / STAGNATION</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="40" width="60" height="20" fill="#2a2a4a" class="stroke-element"/>
+                            <rect id="moving-timeline" x="10" y="45" width="20" height="10" fill="var(--glow-blue)" class="change-element"/>
+                            <rect id="static-figure" x="70" y="45" width="10" height="10" fill="var(--glow-red)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">EXTERNAL PRESSURE / GROWING GAP</div>
+                    <div class="small-text">[ENVIRONMENTAL SHIFT]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="entrenchment-spiral" d="M60 20 A30 30 0 0 0 20 60 A10 10 0 0 0 50 50 L60 20" fill="none" class="stroke-element" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">REINFORCEMENT LOOP / DEEPENING ENTRENCHMENT</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cognitive-rigidity-log-panel" class="dashboard-panel">
+            <h2>COGNITIVE RIGIDITY LOG</h2>
+            <div id="cognitive-rigidity-log-text">
+                <p>Welcome to the Fixed Mindset Protocol Dashboard. This system analyzes the mechanisms behind an individual's resistance to change and new ideas.</p>
+                <p>Use the navigation controls below to observe each stage, from the establishment of core beliefs to the deepening entrenchment of a fixed mindset.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: BASELINE BELIEF SYSTEM</h2><p><strong>ANALYSIS:</strong> The foundation of an individual\'s entrenched ideas, values, and assumptions. These are deeply held beliefs about themselves, the world, and how things "should" be, forming their psychological comfort zone.</p><p><strong>OBSERVATIONS:</strong> Strong convictions, reliance on past experiences, preference for established routines, a sense of certainty in their current knowledge base.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: INCOMING DATA / NEW IDEAS</h2><p><strong>ANALYSIS:</strong> Introduction of new information, concepts, perspectives, or evidence that challenges the existing baseline belief system. This could be from education, social interaction, or personal experience.</p><p><strong>OBSERVATIONS:</strong> Exposure to novel arguments, encountering different cultural practices, learning new scientific findings, receiving feedback that contradicts self-perception.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: THREAT PERCEPTION / COMFORT ZONE</h2><p><strong>ANALYSIS:</strong> The fixed mind perceives the incoming data as a threat to its established order and emotional security. Change is viewed as dangerous, difficult, or unnecessary, triggering a defense mechanism to protect the comfort zone.</p><p><strong>OBSERVATIONS:</strong> Feelings of anxiety or discomfort when confronted with new ideas, dismissal of the source of new information, a strong desire to revert to familiar thoughts and practices.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: COGNITIVE FILTERING / REJECTION</h2><p><strong>ANALYSIS:</strong> The individual actively (often subconsciously) filters out, dismisses, or misinterprets new information that contradicts their existing beliefs. Contradictory evidence is often seen as flawed, biased, or irrelevant.</p><p><strong>OBSERVATIONS:</strong> Ignoring dissenting opinions, finding minor flaws to discredit valid arguments, selective attention to only supporting facts, confirmation bias in action.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: INTERNAL JUSTIFICATION / RATIONALIZATION</h2><p><strong>ANALYSIS:</strong> Elaborate mental arguments and justifications are constructed to reinforce the existing mindset and explain why new ideas are inapplicable, inferior, or wrong. This creates a logical (to the individual) fortress around their beliefs.</p><p><strong>OBSERVATIONS:</strong> Developing complex rationales for inaction, citing anecdotal evidence over statistical data, creating "what-if" scenarios that favor the status quo, deflecting responsibility.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: BEHAVIORAL INERTIA / STATUS QUO</h2><p><strong>ANALYSIS:</strong> The internal resistance manifests in external actions. The individual adheres strictly to established routines, avoids new experiences, and maintains existing patterns, effectively preventing personal or professional growth.</p><p><strong>OBSERVATIONS:</strong> Refusal to try new methods, avoiding new social situations, sticking to comfort foods or entertainment, procrastination on tasks requiring novel approaches.</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: OPPORTUNITY COST / STAGNATION</h2><p><strong>ANALYSIS:</strong> The unseen consequence of the fixed mindset. By refusing change, the individual misses out on potential growth, learning, improved relationships, or career advancements. This often leads to a subtle but profound sense of being "stuck."</p><p><strong>OBSERVATIONS:</strong> Stalled personal development, lack of new skills, missed promotions, strained relationships due to inflexibility, a general feeling of unfulfilled potential.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: EXTERNAL PRESSURE / GROWING GAP</h2><p><strong>ANALYSIS:</strong> While the individual remains fixed, the external world continues to evolve. This creates a growing disparity between their rigid internal world and the dynamic external reality, leading to increased friction and potential irrelevance.</p><p><strong>OBSERVATIONS:</strong> Feeling left behind by technology, struggling to adapt to new workplace demands, social interactions becoming difficult due to outdated views, increased stress from environmental changes.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: REINFORCEMENT LOOP / DEEPENING ENTRENCHMENT</h2><p><strong>ANALYSIS:</strong> The cycle reinforces itself. The perceived "failure" of attempting change (or the stress of external pressure) strengthens the belief that the old ways are best, making the fixed mindset even more rigid and resistant to future change. The psychological walls grow higher.</p><p><strong>OBSERVATIONS:</strong> Increased defensiveness, self-fulfilling prophecies (e.g., "I knew it wouldn\'t work"), withdrawal into familiar routines, a hardened stance against any future suggestion of change.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const cognitiveRigidityLogText = document.getElementById('cognitive-rigidity-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = '';
+                el.style.filter = '';
+                el.style.transform = '';
+            });
+
+            // Specific opacity/visibility resets for elements that are hidden by default or fade in
+            // Box 1
+            document.getElementById('baseline-block').style.transform = '';
+            // Box 2
+            document.getElementById('incoming-data-1').style.opacity = 0;
+            document.getElementById('incoming-data-2').style.opacity = 0;
+            document.getElementById('fixed-wall').style.strokeWidth = '';
+            // Box 3
+            document.getElementById('comfort-shield').style.filter = '';
+            document.getElementById('comfort-shield').style.transform = '';
+            // Box 4
+            document.getElementById('rejection-x').style.strokeDasharray = '0 100';
+            document.getElementById('rejection-x').style.opacity = 0;
+            document.getElementById('new-idea').style.opacity = 1;
+            document.getElementById('new-idea').style.animation = ''; // Clear pulse
+            // Box 5
+            document.getElementById('rationalization-gear').style.transform = '';
+            document.getElementById('fixed-mind-symbol').style.transform = '';
+            // Box 6
+            document.getElementById('stuck-wheel').style.transform = '';
+            document.getElementById('inertia-spark').style.opacity = 0;
+            // Box 7
+            document.getElementById('stagnation-growth').style.transform = '';
+            document.getElementById('stagnation-growth').style.opacity = 1;
+            // Box 8
+            document.getElementById('moving-timeline').style.transform = '';
+            document.getElementById('static-figure').style.transform = '';
+            // Box 9
+            document.getElementById('entrenchment-spiral').style.strokeDashoffset = '';
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                cognitiveRigidityLogText.innerHTML = '<p>Welcome to the Fixed Mindset Protocol Dashboard. This system analyzes the mechanisms behind an individual\'s resistance to change and new ideas.</p><p>Use the navigation controls below to observe each stage, from the establishment of core beliefs to the deepening entrenchment of a fixed mindset.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                cognitiveRigidityLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-2':
+                        document.getElementById('incoming-data-1').style.opacity = 1;
+                        document.getElementById('incoming-data-2').style.opacity = 1;
+                        break;
+                    case 'box-3':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-4':
+                        document.getElementById('rejection-x').style.opacity = 1;
+                        break;
+                    case 'box-5':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-6':
+                        document.getElementById('inertia-spark').style.opacity = 1;
+                        break;
+                    case 'box-7':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-8':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-9':
+                        // Animations tied to CSS class highlight
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
