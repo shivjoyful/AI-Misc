@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destructive Personality Profile: Impact & Progression Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c;
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a;
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4;
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c;
+            --glow-red: #ff0055; /* Destructive elements, active harm */
+            --glow-blue: #00ffff; /* Affected elements, external reality, potential for change */
+            --glow-purple: #ff00ff;
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3);
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red);
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #flowchart-panel {
+            min-height: 750px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #impact-assessment-log-panel {
+            min-height: 750px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #impact-assessment-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #impact-assessment-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+        #impact-assessment-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #impact-assessment-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #impact-assessment-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #impact-assessment-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg .destructive-element {
+            fill: var(--glow-red);
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .affected-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        .flow-box.highlight .box-icon svg path:not([class]),
+        .flow-box.highlight .box-icon svg circle:not([class]),
+        .flow-box.highlight .box-icon svg rect:not([class]),
+        .flow-box.highlight .box-icon svg polygon:not([class]),
+        .flow-box.highlight .box-icon svg line:not([class]),
+        .flow-box.highlight .box-icon svg .stroke-element:not([class]) {
+            fill: var(--text-light); /* Default elements become lighter */
+            stroke: var(--text-light);
+        }
+        
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. CORE DYSFUNCTION / MALADAPTIVE SCHEMA: Pulsing fractured core */
+        @keyframes corePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes coreFracture {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        .flow-box.highlight #core-base { animation: corePulse 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #core-fracture-line { animation: coreFracture 1.5s ease-out forwards; }
+        #core-fracture-line { opacity: 0; }
+
+        /* 2. TRIGGER EVENT / STRESSOR ACTIVATION: Lightning strike */
+        @keyframes lightningStrike {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; transform: translateY(0); }
+            25% { transform: translateY(-10px); }
+            75% { transform: translateY(10px); }
+        }
+        .flow-box.highlight #trigger-lightning { animation: lightningStrike 1s ease-out infinite; }
+        #trigger-lightning { opacity: 0; }
+
+        /* 3. INTERNAL ESCALATION / IMPULSE GENERATION: Swelling red mass */
+        @keyframes massSwell {
+            0%, 100% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes spikeGrow {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        .flow-box.highlight #escalation-mass { animation: massSwell 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #escalation-spike { animation: spikeGrow 1s ease-out infinite alternate; }
+
+        /* 4. HARMFUL MANIFESTATION / DESTRUCTIVE ACT: Shattering glass */
+        @keyframes shatterEffect {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2) rotate(10deg); opacity: 0; }
+        }
+        .flow-box.highlight #shattering-base { animation: shatterEffect 1s ease-out forwards; }
+        .flow-box.highlight #shattering-fragment-1 { animation: shatterEffect 1s 0.1s ease-out forwards; }
+        .flow-box.highlight #shattering-fragment-2 { animation: shatterEffect 1s 0.2s ease-out forwards; }
+        #shattering-base, #shattering-fragment-1, #shattering-fragment-2 { opacity: 1; } /* Default visible */
+
+        /* 5. IMMEDIATE FALLOUT / IMPACT ZONE: Spreading cracks */
+        @keyframes crackSpread {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        .flow-box.highlight #impact-main-crack { animation: crackSpread 1.5s ease-out forwards; }
+        .flow-box.highlight #impact-sub-crack-1 { animation: crackSpread 1.5s 0.2s ease-out forwards; }
+        .flow-box.highlight #impact-sub-crack-2 { animation: crackSpread 1.5s 0.4s ease-out forwards; }
+        #impact-main-crack, #impact-sub-crack-1, #impact-sub-crack-2 { opacity: 0; }
+
+        /* 6. JUSTIFICATION / RATIONALIZATION MATRIX: Shield with distorted text */
+        @keyframes shieldPulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--glow-red)); }
+            50% { filter: drop-shadow(0 0 5px var(--glow-red)); }
+        }
+        @keyframes textWiggle {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(2px) translateY(1px); }
+            75% { transform: translateX(-2px) translateY(-1px); }
+        }
+        .flow-box.highlight #rationalization-shield { animation: shieldPulseGlow 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #blame-text { animation: textWiggle 0.5s linear infinite; }
+
+        /* 7. ISOLATION / RELATIONSHIP FRACTURE: Separating figures */
+        @keyframes figuresSeparate {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-10px); }
+        }
+        @keyframes barrierAppear {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .flow-box.highlight #isolated-figure-left { animation: figuresSeparate 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #isolation-barrier { animation: barrierAppear 1s ease-out forwards; }
+        #isolation-barrier { opacity: 0; }
+
+        /* 8. PATTERN ENTRENCHMENT / CYCLE SOLIDIFICATION: Spiked loop */
+        @keyframes loopFlow {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -100; }
+        }
+        @keyframes spikePulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.2); }
+        }
+        .flow-box.highlight #entrenchment-path { animation: loopFlow 3s linear infinite; }
+        .flow-box.highlight #entrenchment-spike-1, .flow-box.highlight #entrenchment-spike-2 { animation: spikePulse 1s ease-in-out infinite alternate; }
+
+        /* 9. FUTURE TRAJECTORY / ESCALATION OR INTERVENTION: Forked path */
+        @keyframes pathGlowDestructive {
+            0%, 100% { stroke: var(--glow-red); }
+            50% { stroke: var(--highlight-red); }
+        }
+        @keyframes pathGlowIntervention {
+            0%, 100% { stroke: var(--glow-blue); }
+            50% { stroke: var(--accent-blue); }
+        }
+        .flow-box.highlight #path-destructive { animation: pathGlowDestructive 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #path-intervention { animation: pathGlowIntervention 2s ease-in-out infinite alternate; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>DESTRUCTIVE PERSONALITY PROFILE: IMPACT & PROGRESSION ANALYSIS</h1>
+        <p class="subtitle">MAPPING BEHAVIORAL PATTERNS, TRIGGERS, AND CONSEQUENTIAL DAMAGE</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="core-base" cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element destructive-element"/>
+                            <line id="core-fracture-line" x1="30" y1="40" x2="70" y2="60" class="stroke-element destructive-element" stroke-width="2"/>
+                            <line x1="50" y1="20" x2="50" y2="80" class="stroke-element destructive-element" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">CORE DYSFUNCTION / MALADAPTIVE SCHEMA</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" class="stroke-element affected-element"/>
+                            <polygon id="trigger-lightning" points="45 20, 55 20, 50 40, 55 40, 45 60, 50 60, 45 80" fill="var(--glow-red)" opacity="0" class="destructive-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">TRIGGER EVENT / STRESSOR ACTIVATION</div>
+                    <div class="small-text">[EXTERNAL CATALYST]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#2a2a4a" class="stroke-element affected-element"/>
+                            <circle id="escalation-mass" cx="50" cy="50" r="20" fill="var(--glow-red)" class="destructive-element"/>
+                            <polygon id="escalation-spike" points="50 15, 60 30, 40 30" fill="var(--glow-red)" class="destructive-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INTERNAL ESCALATION / IMPULSE GENERATION</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <g id="shattering-base" class="affected-element">
+                                <rect x="30" y="30" width="40" height="40" fill="#2a2a4a"/>
+                                <line x1="30" y1="30" x2="70" y2="70" stroke="var(--text-medium)" stroke-width="2"/>
+                                <line x1="70" y1="30" x2="30" y2="70" stroke="var(--text-medium)" stroke-width="2"/>
+                            </g>
+                            <rect id="shattering-fragment-1" x="20" y="20" width="10" height="10" fill="var(--glow-red)" class="destructive-element"/>
+                            <rect id="shattering-fragment-2" x="70" y="70" width="10" height="10" fill="var(--glow-red)" class="destructive-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">HARMFUL MANIFESTATION / DESTRUCTIVE ACT</div>
+                    <div class="small-text">[UNLEASHED IMPACT]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a" class="stroke-element affected-element"/>
+                            <line id="impact-main-crack" x1="50" y1="20" x2="50" y2="80" class="stroke-element affected-element" stroke-width="2"/>
+                            <line id="impact-sub-crack-1" x1="50" y1="50" x2="20" y2="50" class="stroke-element affected-element" stroke-width="1"/>
+                            <line id="impact-sub-crack-2" x1="50" y1="50" x2="80" y2="50" class="stroke-element affected-element" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">IMMEDIATE FALLOUT / IMPACT ZONE</div>
+                    <div class="small-text">[INITIAL DAMAGE]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a" class="stroke-element affected-element"/>
+                            <rect id="rationalization-shield" x="30" y="30" width="40" height="40" fill="var(--glow-red)" class="destructive-element"/>
+                            <text id="blame-text" x="50" y="55" font-size="12" text-anchor="middle" fill="var(--text-light)">"NOT MY FAULT"</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">JUSTIFICATION / RATIONALIZATION MATRIX</div>
+                    <div class="small-text">[ACCOUNTABILITY DEFLECTION]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="isolated-figure-left" d="M30 60 C20 60, 15 50, 30 50 C45 50, 40 60, 30 60 Z M30 70 L25 75 L35 75 Z" fill="#2a2a4a" class="affected-element"/>
+                            <path d="M70 60 C60 60, 55 50, 70 50 C85 50, 80 60, 70 60 Z M70 70 L65 75 L75 75 Z" fill="#2a2a4a" class="affected-element"/>
+                            <line id="isolation-barrier" x1="50" y1="20" x2="50" y2="80" class="stroke-element destructive-element" stroke-width="3" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">ISOLATION / RELATIONSHIP FRACTURE</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="entrenchment-path" d="M20 50 A30 30 0 1 1 80 50 A30 30 0 1 1 20 50 Z" fill="none" class="stroke-element destructive-element" stroke-width="3"/>
+                            <polygon id="entrenchment-spike-1" points="50 15, 55 25, 45 25" fill="var(--glow-red)" class="destructive-element"/>
+                            <polygon id="entrenchment-spike-2" points="50 85, 55 75, 45 75" fill="var(--glow-red)" class="destructive-element"/>
+                            <circle cx="50" cy="50" r="10" fill="#2a2a4a" class="stroke-element destructive-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">PATTERN ENTRENCHMENT / CYCLE SOLIDIFICATION</div>
+                    <div class="small-text">[SELF-REINFORCING DESTRUCTION]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <line x1="50" y1="20" x2="50" y2="50" class="stroke-element affected-element" stroke-width="2"/>
+                            <line id="path-destructive" x1="50" y1="50" x2="75" y2="80" class="stroke-element destructive-element" stroke-width="3"/>
+                            <line id="path-intervention" x1="50" y1="50" x2="25" y2="80" class="stroke-element affected-element" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">FUTURE TRAJECTORY / ESCALATION OR INTERVENTION</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="impact-assessment-log-panel" class="dashboard-panel">
+            <h2>IMPACT ASSESSMENT LOG</h2>
+            <div id="impact-assessment-log-text">
+                <p>Welcome to the Destructive Personality Profile Dashboard. This system analyzes behavioral patterns, triggers, and the consequential damage associated with destructive personalities.</p>
+                <p>Use the navigation controls below to observe each stage, from underlying dysfunctions to potential future trajectories.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: CORE DYSFUNCTION / MALADAPTIVE SCHEMA</h2><p><strong>ANALYSIS:</strong> The foundational psychological vulnerabilities, unresolved traumas, or deeply ingrained distorted beliefs that form the basis of the destructive personality. These are often unconscious.</p><p><strong>OBSERVATIONS:</strong> Fragile self-esteem, deep-seated anger/resentment, pervasive distrust, fear of abandonment, underdeveloped empathy, or a sense of entitlement.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: TRIGGER EVENT / STRESSOR ACTIVATION</h2><p><strong>ANALYSIS:</strong> An external event or internal thought that activates the maladaptive schema. This could be a perceived slight, a challenge to authority, a feeling of inadequacy, or any situation that threatens their fragile internal balance.</p><p><strong>OBSERVATIONS:</strong> Criticism, rejection, perceived betrayal, unmet expectations, heightened stress, loss of control, or feeling misunderstood.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: INTERNAL ESCALATION / IMPULSE GENERATION</h2><p><strong>ANALYSIS:</strong> A rapid internal build-up of negative emotions (rage, fear, shame, anxiety) that overwhelms the individual\'s capacity for healthy coping. This leads to the generation of destructive impulses.</p><p><strong>OBSERVATIONS:</strong> Intense emotional flooding, rumination, obsessive thoughts of retaliation, physical tension, racing heartbeat, difficulty regulating emotions.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: HARMFUL MANIFESTATION / DESTRUCTIVE ACT</h2><p><strong>ANALYSIS:</strong> The destructive impulses are translated into overt behaviors. These acts can be directed at others (aggression, manipulation, sabotage), at the environment, or at oneself (self-harm, addiction).</p><p><strong>OBSERVATIONS:</strong> Verbal abuse, physical aggression, emotional blackmail, deliberate undermining, spreading rumors, property damage, substance abuse, reckless behavior.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: IMMEDIATE FALLOUT / IMPACT ZONE</h2><p><strong>ANALYSIS:</strong> The direct and observable consequences of the destructive act. This includes the pain, damage, or chaos inflicted upon the target(s) of the behavior.</p><p><strong>OBSERVATIONS:</strong> Emotional distress in others, damaged property, strained relationships, public scandal, immediate regret (or lack thereof) from the destructive individual, breakdown of trust.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: JUSTIFICATION / RATIONALIZATION MATRIX</h2><p><strong>ANALYSIS:</strong> A cognitive defense mechanism where the destructive individual avoids taking responsibility. They construct elaborate rationalizations, blame others, or minimize the harm caused to protect their ego.</p><p><strong>OBSERVATIONS:</strong> Blaming the victim, twisting facts, playing the victim, denial, shifting responsibility, expressing false remorse, self-righteous anger.</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: ISOLATION / RELATIONSHIP FRACTURE</h2><p><strong>ANALYSIS:</strong> The cumulative effect of destructive behaviors and lack of accountability. Relationships erode, trust is irrevocably broken, and the destructive individual becomes increasingly isolated from healthy connections.</p><p><strong>OBSERVATIONS:</strong> Loss of friends, family estrangement, professional setbacks, loneliness, difficulty forming new relationships, a deepening sense of being misunderstood or persecuted.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: PATTERN ENTRENCHMENT / CYCLE SOLIDIFICATION</h2><p><strong>ANALYSIS:</strong> The destructive cycle becomes deeply ingrained. The behaviors are reinforced, becoming habitual responses to triggers. The personality structure becomes more rigid, and the destructive patterns are normalized within their worldview.</p><p><strong>OBSERVATIONS:</strong> Repetitive destructive behaviors, predictable reactions to triggers, increasing difficulty in breaking the cycle, a hardened stance against external criticism or suggestions for change.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: FUTURE TRAJECTORY / ESCALATION OR INTERVENTION</h2><p><strong>ANALYSIS:</strong> The ultimate fork in the path. Without significant self-awareness or external intervention (therapy, consequences), the destructive pattern is likely to escalate. Intervention offers a challenging, but possible, path towards breaking the cycle and fostering constructive change.</p><p><strong>OBSERVATIONS:</strong> (Escalation) Increasing severity/frequency of destructive acts, deeper isolation, severe personal consequences. (Intervention) Seeking help, accepting responsibility, developing coping mechanisms, rebuilding relationships, personal growth.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const impactAssessmentLogText = document.getElementById('impact-assessment-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = '';
+                el.style.filter = '';
+                el.style.transform = '';
+            });
+
+            // Specific opacity/visibility resets for elements that are hidden by default or fade in
+            // Box 1
+            document.getElementById('core-fracture-line').style.opacity = 0;
+            document.getElementById('core-fracture-line').style.strokeDasharray = '0 100';
+            // Box 2
+            document.getElementById('trigger-lightning').style.opacity = 0;
+            // Box 3
+            document.getElementById('escalation-mass').style.transform = '';
+            document.getElementById('escalation-spike').style.transform = '';
+            // Box 4
+            document.getElementById('shattering-base').style.opacity = 1;
+            document.getElementById('shattering-base').style.transform = '';
+            document.getElementById('shattering-fragment-1').style.opacity = 1;
+            document.getElementById('shattering-fragment-1').style.transform = '';
+            document.getElementById('shattering-fragment-2').style.opacity = 1;
+            document.getElementById('shattering-fragment-2').style.transform = '';
+            // Box 5
+            document.getElementById('impact-main-crack').style.opacity = 0;
+            document.getElementById('impact-main-crack').style.strokeDasharray = '0 100';
+            document.getElementById('impact-sub-crack-1').style.opacity = 0;
+            document.getElementById('impact-sub-crack-1').style.strokeDasharray = '0 100';
+            document.getElementById('impact-sub-crack-2').style.opacity = 0;
+            document.getElementById('impact-sub-crack-2').style.strokeDasharray = '0 100';
+            // Box 6
+            document.getElementById('rationalization-shield').style.filter = '';
+            document.getElementById('blame-text').style.transform = '';
+            // Box 7
+            document.getElementById('isolated-figure-left').style.transform = '';
+            document.getElementById('isolation-barrier').style.opacity = 0;
+            // Box 8
+            document.getElementById('entrenchment-path').style.strokeDashoffset = '';
+            document.getElementById('entrenchment-spike-1').style.transform = '';
+            document.getElementById('entrenchment-spike-2').style.transform = '';
+            // Box 9
+            document.getElementById('path-destructive').style.stroke = 'var(--text-medium)';
+            document.getElementById('path-intervention').style.stroke = 'var(--text-medium)';
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                impactAssessmentLogText.innerHTML = '<p>Welcome to the Destructive Personality Profile Dashboard. This system analyzes behavioral patterns, triggers, and the consequential damage associated with destructive personalities.</p><p>Use the navigation controls below to observe each stage, from underlying dysfunctions to potential future trajectories.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                impactAssessmentLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        document.getElementById('core-fracture-line').style.opacity = 1;
+                        break;
+                    case 'box-2':
+                        document.getElementById('trigger-lightning').style.opacity = 1;
+                        break;
+                    case 'box-3':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-4':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-5':
+                        document.getElementById('impact-main-crack').style.opacity = 1;
+                        document.getElementById('impact-sub-crack-1').style.opacity = 1;
+                        document.getElementById('impact-sub-crack-2').style.opacity = 1;
+                        break;
+                    case 'box-6':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-7':
+                        document.getElementById('isolation-barrier').style.opacity = 1;
+                        break;
+                    case 'box-8':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-9':
+                        // Animations tied to CSS class highlight
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
