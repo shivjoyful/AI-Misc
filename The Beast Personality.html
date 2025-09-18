@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Beast Personality: A Medical & Psychological View</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .slide-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 900px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            /* Ensures content transitions nicely */
+        }
+
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            line-height: 1.3;
+        }
+
+        .toggle-button-container {
+            margin-bottom: 30px;
+        }
+
+        .toggle-button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-button:hover {
+            background-color: #155ab6;
+            transform: translateY(-2px);
+        }
+
+        .toggle-button:active {
+            background-color: #0d47a1;
+            transform: translateY(0);
+        }
+
+        .content-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            text-align: left;
+        }
+
+        .content-section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .trait-card {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .trait-card h3 {
+            color: #1a73e8;
+            margin-top: 0;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .trait-card p {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Specific styles for "Wild" vs. "Tamed" to provide visual distinction */
+        #wild-traits .trait-card h3 {
+            color: #dc3545;
+            /* Reddish for wild/unregulated */
+        }
+
+        #wild-traits .trait-card {
+            border-color: #dc354530;
+        }
+
+        #tamed-traits .trait-card h3 {
+            color: #28a745;
+            /* Greenish for tamed/integrated */
+        }
+
+        #tamed-traits .trait-card {
+            border-color: #28a74530;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .slide-container {
+                padding: 30px 20px;
+            }
+
+            .content-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <h1>The "Beast" Personality: A Medical & Psychological View</h1>
+        <p>Understanding intense, often unregulated, and powerfully instinctive traits.</p>
+
+        <div class="toggle-button-container">
+            <button class="toggle-button" id="toggleViewButton">Show Integrated Traits</button>
+        </div>
+
+        <div id="wild-traits" class="content-section active">
+            <h2>Wild & Unregulated Manifestations</h2>
+            <div class="trait-card">
+                <h3>Hyper-Vigilance & Intuitive Processing</h3>
+                <p>Intelligence skewed towards immediate threat detection. Characterized by an overactive amygdala and sympathetic nervous system, leading to hyper-awareness and rapid, often subconscious, processing of sensory information. Can struggle with abstract social nuances.</p>
+            </div>
+            <div class="trait-card">
+                <h3>Emotional Dysregulation & Impulsivity</h3>
+                <p>Emotions experienced intensely and shifting rapidly, often disproportionately to triggers. Difficulty regulating these emotions leads to impulsive behaviors (e.g., aggression, self-harm) for immediate relief. Common in BPD, Bipolar, or severe ADHD.</p>
+            </div>
+            <div class="trait-card">
+                <h3>Attachment Insecurity & Paranoid Ideation</h3>
+                <p>Profound mistrust of others, leading to social isolation and difficulty forming stable bonds. Interprets neutral actions as hostile; strong need for independence, rejecting help out of fear of betrayal. Often rooted in childhood trauma.</p>
+            </div>
+            <div class="trait-card">
+                <h3>High Pain Tolerance & Maladaptive Coping</h3>
+                <p>Remarkable capacity to endure physical and psychological hardship. This strength often masks maladaptive coping: stoicism, emotional suppression, pushing past healthy limits, and difficulty seeking help due to denial of legitimate needs.</p>
+            </div>
+        </div>
+
+        <div id="tamed-traits" class="content-section">
+            <h2>Integrated & Regulated Manifestations</h2>
+            <div class="trait-card">
+                <h3>Focused Insight & Adaptive Awareness</h3>
+                <p>Hyper-vigilance is re-channeled into acute, adaptive awareness. Keen observational skills are used for astute social insight and proactive problem-solving. This includes differentiating real vs. perceived threats, often through trauma-informed CBT/DBT.</p>
+            </div>
+            <div class="trait-card">
+                <h3>Deep-Seated Drive & Emotional Resilience</h3>
+                <p>Intense emotions are not suppressed but understood and channeled through emotion regulation skills (e.g., DBT). Explosive anger becomes a drive for justice, profound joy for sustained motivation, and protectiveness for unwavering advocacy.</p>
+            </div>
+            <div class="trait-card">
+                <h3>Discerning Loyalty & Secure Attachment</h3>
+                <p>Profound mistrust evolves into a discerning, yet fierce loyalty, built on earned trust (via attachment-based therapy). The individual forms deep, protective bonds, becoming a steadfast ally while maintaining healthy boundaries and self-worth.</p>
+            </div>
+            <div class="trait-card">
+                <h3>Resilient Power & Strategic Endurance</h3>
+                <p>Raw strength transforms into resilient power. The individual leverages their fortitude strategically, knowing when to push and when to rest. Mindfulness and skill integration enable sustainable engagement, recognizing that vulnerability is also a strength.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('toggleViewButton');
+            const wildTraitsSection = document.getElementById('wild-traits');
+            const tamedTraitsSection = document.getElementById('tamed-traits');
+
+            let showingWild = true; // State variable
+
+            // Function to update the view
+            function updateView() {
+                if (showingWild) {
+                    wildTraitsSection.classList.add('active');
+                    tamedTraitsSection.classList.remove('active');
+                    toggleButton.textContent = 'Show Integrated Traits';
+                } else {
+                    wildTraitsSection.classList.remove('active');
+                    tamedTraitsSection.classList.add('active');
+                    toggleButton.textContent = 'Show Unregulated Traits';
+                }
+            }
+
+            // Event listener for the button
+            toggleButton.addEventListener('click', () => {
+                showingWild = !showingWild; // Toggle the state
+                updateView(); // Apply the new state
+            });
+
+            // Initial view setup
+            updateView();
+        });
+    </script>
+</body>
+
+</html>
