@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Four Archetypes of Purpose & Meaning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #10101c;
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a;
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4; /* For titles and subtle highlights */
+            --glow-highlight: #00ffcc; /* Vibrant highlight for active states and main titles */
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-hover: #3d3d60;
+            --box-bg-active: #4a4a70;
+            --info-box-bg: #2a2a45; /* Darker background for scenario boxes */
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .chart-header {
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-highlight);
+            text-shadow: 0 0 12px var(--glow-highlight), 0 0 25px rgba(0, 255, 204, 0.4);
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+            font-size: 3em;
+        }
+        p.subtitle {
+            font-size: 1.15em;
+            color: var(--text-medium);
+            max-width: 850px;
+            margin: 0 auto;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+            max-width: 1050px; /* Slightly wider to accommodate expanded cards */
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background-color: var(--box-bg-normal);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease-in-out, box-shadow 0.4s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align content to top */
+            position: relative;
+            overflow: hidden; /* For rounded corners */
+            min-height: 220px; /* Base height when collapsed */
+            box-sizing: border-box;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 204, 0.25);
+            background-color: var(--box-bg-hover);
+        }
+
+        .category-card.active {
+            border-color: var(--glow-highlight);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 255, 204, 0.7);
+            background-color: var(--box-bg-active);
+            transform: scale(1.02);
+            z-index: 10; /* Bring active card to front */
+        }
+
+        .card-header-content {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px; /* Space between header and description */
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.7em;
+            color: var(--accent-blue);
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+            margin-bottom: 8px;
+            letter-spacing: 1.5px;
+            line-height: 1.2;
+        }
+
+        .card-summary {
+            font-size: 1em;
+            color: var(--text-light);
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .card-description-wrapper {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.6s ease-out, opacity 0.5s ease-out, padding-top 0.5s ease-out, margin-top 0.5s ease-out;
+            padding-top: 0;
+        }
+
+        .category-card.active .card-description-wrapper {
+            max-height: 800px; /* Sufficient height for expanded content - will be overridden by JS */
+            opacity: 1;
+            padding-top: 15px;
+            margin-top: 10px; /* Add margin after header content */
+            border-top: 1px dashed var(--border-color); /* Separator */
+        }
+
+        .card-description p, .card-description ul {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .card-description strong {
+            color: var(--text-light);
+        }
+        .card-description h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            color: var(--glow-highlight);
+            margin-top: 20px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(0, 255, 204, 0.2);
+            border-bottom: 1px dotted var(--border-color);
+            padding-bottom: 5px;
+        }
+        .card-description ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .card-description ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 5px;
+        }
+        .card-description ul li::before {
+            content: '•';
+            color: var(--accent-blue);
+            position: absolute;
+            left: 0;
+        }
+        .card-description .scenario {
+            background-color: var(--info-box-bg);
+            border-left: 3px solid var(--accent-blue);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        .card-description .scenario strong {
+            color: var(--accent-blue);
+            font-family: 'Orbitron', sans-serif;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+
+        .card-icon {
+            position: absolute;
+            bottom: 20px; /* Position icon at bottom-right */
+            right: 25px;
+            font-size: 3.5em;
+            color: rgba(0, 255, 204, 0.1);
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+            line-height: 1; /* Prevent extra space around icon */
+        }
+
+        .category-card.active .card-icon {
+            color: rgba(0, 255, 204, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .chart-grid {
+                grid-template-columns: 1fr; /* Single column layout on smaller screens */
+                max-width: 600px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            .card-title {
+                font-size: 1.5em;
+            }
+            /* Adjust max-height for content on smaller screens */
+            .category-card.active .card-description-wrapper {
+                max-height: 1000px; /* Allow more height for taller content */
+            }
+        }
+        @media (max-width: 600px) {
+             h1 {
+                font-size: 2em;
+                letter-spacing: 3px;
+            }
+            .card-title {
+                font-size: 1.3em;
+            }
+            .card-icon {
+                font-size: 3em;
+                bottom: 15px;
+                right: 15px;
+            }
+            .category-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chart-header">
+        <h1>THE ARCHETYPES OF PURPOSE & MEANING</h1>
+        <p class="subtitle">Exploring four fundamental ways individuals relate to purpose and find meaning in their lives. Click each card to dive deeper into their characteristics and real-world scenarios.</p>
+    </div>
+
+    <div class="chart-grid">
+        
+        <div class="category-card" id="card-fulfilled-achievers">
+            <div class="card-header-content">
+                <h2 class="card-title">1. The Fulfilled Achievers</h2>
+                <p class="card-summary">With Purpose & Living with Meaning</p>
+            </div>
+            <div class="card-description-wrapper">
+                <div class="card-description">
+                    <p>These individuals experience a powerful synergy between their external ambitions and their internal sense of value. They are not merely pursuing goals; they are living out their core values and beliefs through their actions. This deep alignment fosters immense satisfaction, resilience, and a profound sense of self-worth. They often inspire others through their coherent and impactful lives.</p>
+                    <h3>Key Characteristics:</h3>
+                    <ul>
+                        <li><strong>Intrinsic Motivation:</strong> Driven by inner convictions, personal values, and a genuine desire to make a difference, not just external rewards or recognition.</li>
+                        <li><strong>Coherent Life Narrative:</strong> Their past efforts, present actions, and future aspirations seamlessly weave into a meaningful and understandable story of their life's direction.</li>
+                        <li><strong>High Resilience:</strong> Setbacks, failures, or obstacles are viewed as learning opportunities and challenges to overcome, strengthening their resolve rather than derailing their path.</li>
+                        <li><strong>Authentic Contribution:</strong> Their work, relationships, and contributions genuinely align with their personal ethos, leading to a feeling of true impact and integrity.</li>
+                        <li><strong>Optimal Well-being:</strong> Experience high levels of psychological flourishing, life satisfaction, and emotional stability due to the congruence of their inner and outer worlds.</li>
+                    </ul>
+                    <div class="scenario">
+                        <strong>Scenario: Elena, The Social Entrepreneur</strong>
+                        <p>Elena, a former environmental activist, founded "EcoCycle Solutions," a company that upcycles plastic waste into durable building materials, providing employment to marginalized communities. Every morning, she wakes up energized, knowing her work directly addresses climate change and social inequality—issues she cares deeply about since childhood. Despite long hours, regulatory hurdles, and fierce market competition, the tangible positive impact of her business and the passion of her team fill her with a profound sense of meaning. Her entrepreneurial drive is not just about profit; it's about enacting her vision for a more sustainable and equitable world, making her achievements deeply fulfilling on every level.</p>
+                    </div>
+                </div>
+            </div>
+            <span class="card-icon">🚀</span>
+        </div>
+
+        <div class="category-card" id="card-driven-disconnected">
+            <div class="card-header-content">
+                <h2 class="card-title">2. The Driven but Disconnected</h2>
+                <p class="card-summary">With Purpose & Living without Meaning</p>
+            </div>
+            <div class="card-description-wrapper">
+                <div class="card-description">
+                    <p>These individuals are often highly successful by conventional metrics, diligently pursuing clear and ambitious goals like career advancement, wealth accumulation, or social status. However, despite their outward achievements, they suffer from an underlying sense of emptiness, fatigue, or the feeling that "something is missing." Their purpose is frequently externally defined—driven by societal expectations, parental pressures, or a desire for material security—lacking a genuine connection to their innermost values and passions.</p>
+                    <h3>Key Characteristics:</h3>
+                    <ul>
+                        <li><strong>External Validation Seeking:</strong> Their motivation often stems from gaining approval, admiration, or material rewards from others, rather than internal satisfaction.</li>
+                        <li><strong>"Golden Cage" Syndrome:</strong> They may feel trapped by their own success, fearing the loss of status, wealth, or comfort if they were to deviate from their established path.</li>
+                        <li><strong>Burnout & Cynicism:</strong> The relentless pursuit of goals without internal resonance leads to chronic exhaustion, emotional detachment, and a growing cynicism about their work and life.</li>
+                        <li><strong>Existential Questioning:</strong> Despite having "everything," they frequently ponder the "point" of their efforts, experiencing a void where meaning should be.</li>
+                        <li><strong>Emotional Flatness:</strong> May struggle to experience genuine joy, passion, or deep connection, leading to a sense of unfulfillment or emotional numbness.</li>
+                    </ul>
+                    <div class="scenario">
+                        <strong>Scenario: David, The Corporate Lawyer</strong>
+                        <p>David is a senior partner at a prestigious international law firm, earning a seven-figure salary. He drives a luxury car, lives in a sprawling mansion, and his peers respect his relentless drive and sharp intellect in high-stakes mergers. Yet, after every major victory, he feels a fleeting sense of relief followed by an immense, hollow emptiness. He works 80-hour weeks, rarely sees his children, and finds little joy in his expensive hobbies. He achieved his "purpose" of financial and professional success, but somewhere along the way, the personal meaning was lost, leaving him perpetually questioning, "Is this all there is to life?"</p>
+                    </div>
+                </div>
+            </div>
+            <span class="card-icon">⚙️</span>
+        </div>
+
+        <div class="category-card" id="card-present-explorers">
+            <div class="card-header-content">
+                <h2 class="card-title">3. The Present Moment Explorers</h2>
+                <p class="card-summary">Without Purpose & Living with Meaning</p>
+            </div>
+            <div class="card-description-wrapper">
+                <div class="card-description">
+                    <p>These individuals don't necessarily subscribe to a grand, overarching life purpose or a singular, long-term goal that dictates their every move. Instead, they find profound meaning and richness in the here and now, in their daily experiences, relationships, and the natural world. Their sense of significance is generated internally through appreciation, mindfulness, curiosity, and a deep, often spontaneous, engagement with life as it unfolds. They tend to prioritize living fully and authentically over achieving specific external milestones.</p>
+                    <h3>Key Characteristics:</h3>
+                    <ul>
+                        <li><strong>Mindful & Appreciative:</strong> Possesses a heightened ability to find joy, beauty, and significance in small, everyday details and sensory experiences.</li>
+                        <li><strong>Strong Internal Compass:</strong> Meaning is derived primarily from within—from personal experiences, feelings, and connections—not reliant on external achievements or future outcomes.</li>
+                        <li><strong>Adaptable & Flexible:</strong> Less concerned with rigid plans or long-term strategies; embraces change, uncertainty, and the natural flow of life.</li>
+                        <li><strong>Rich Relationships:</strong> Prioritizes deep, authentic connections with others and often fosters a strong sense of community and belonging.</li>
+                        <li><strong>Experience-Oriented:</strong> Values the quality and depth of lived experience over material possessions or status symbols.</li>
+                    </ul>
+                    <div class="scenario">
+                        <strong>Scenario: Maya, The Freelance Artisan</strong>
+                        <p>Maya is a freelance ceramic artist who creates beautiful, functional pottery from her home studio. She doesn't have a grand business plan, an ambition to build an empire, or a goal to become world-famous. Her days are filled with the meditative process of shaping clay, foraging for natural pigments in the local woods, sharing wholesome meals with friends, and reading philosophical texts. She lives simply, finding immense satisfaction and meaning in the tactile nature of her craft, the ever-changing beauty of the world around her, and the warmth of her human connections. For Maya, "purpose" is simply to live fully and create authentically in the present moment, day by day, finding deep contentment without a singular, distant aim.</p>
+                    </div>
+                </div>
+            </div>
+            <span class="card-icon">🌸</span>
+        </div>
+
+        <div class="category-card" id="card-drifters-disenchanted">
+            <div class="card-header-content">
+                <h2 class="card-title">4. The Drifters / Disenchanted</h2>
+                <p class="card-summary">Without Purpose & Living without Meaning</p>
+            </div>
+            <div class="card-description-wrapper">
+                <div class="card-description">
+                    <p>This state is characterized by a profound absence of both external direction and an internal sense of significance. Individuals in this category often feel lost, aimless, and deeply unmotivated, perceiving their lives as lacking coherence or value. Life can appear arbitrary, overwhelming, or simply empty, leading to feelings of apathy, despair, or existential nihilism. They struggle to identify compelling reasons to act, to pursue interests, or to feel that anything they do truly holds lasting worth, often becoming passive observers of their own existence.</p>
+                    <h3>Key Characteristics:</h3>
+                    <ul>
+                        <li><strong>Lack of Direction:</strong> No clear goals, aspirations, or a sense of what they "should" be doing, leading to a pervasive sense of inertia and stagnation.</li>
+                        <li><strong>Apathy & Detachment:</strong> Disconnected from personal interests, professional endeavors, social relationships, and the wider world, often experiencing emotional numbness.</li>
+                        <li><strong>Overwhelmed by Choice:</strong> The vast array of life choices becomes paralyzing due to the absence of guiding values or internal preferences.</li>
+                        <li><strong>Passive Existence:</strong> Rather than actively shaping their lives, they often feel life happens *to* them, reacting to circumstances rather than initiating action.</li>
+                        <li><strong>Struggles with Mental Health:</strong> This state can often correlate with feelings of depression, anxiety, hopelessness, or a sense of isolation.</li>
+                    </ul>
+                    <div class="scenario">
+                        <strong>Scenario: Alex, The Apathetic Graduate</strong>
+                        <p>Alex graduated with a degree in business, a choice largely made to satisfy parental expectations rather than personal passion. Months later, he spends most of his days in a cycle of aimless social media scrolling, binge-watching TV shows, or playing video games. He has no job prospects he's excited about, no genuine hobbies that engage him, and feels little connection to his old friends, who seem to be moving forward with their lives. He knows he "should" be looking for a job or developing new skills, but the motivation never comes. Everything feels meaningless, and the sheer effort required to initiate change seems insurmountable, leaving him adrift in a sea of pervasive apathy and an unfulfilled potential.</p>
+                    </div>
+                </div>
+            </div>
+            <span class="card-icon">🌫️</span>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.category-card');
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const descriptionWrapper = card.querySelector('.card-description-wrapper');
+                    const descriptionContent = card.querySelector('.card-description');
+
+                    // Check if this card is currently active
+                    const isActive = card.classList.contains('active');
+
+                    // First, close all other cards (if any are open)
+                    cards.forEach(c => {
+                        if (c !== card) { // Don't try to close the current card yet
+                            c.classList.remove('active');
+                            c.querySelector('.card-description-wrapper').style.maxHeight = '0px';
+                        }
+                    });
+
+                    // Toggle active state for the clicked card
+                    if (isActive) {
+                        // If it was active, close it
+                        card.classList.remove('active');
+                        descriptionWrapper.style.maxHeight = '0px';
+                    } else {
+                        // If it was not active, open it
+                        card.classList.add('active');
+                        // Set max-height to the actual scroll height for smooth expansion
+                        // Add a small buffer just in case content slightly expands after render
+                        descriptionWrapper.style.maxHeight = (descriptionContent.scrollHeight + 30) + 'px'; 
+                    }
+                });
+            });
+
+            // Optional: Close active card if user clicks outside of it
+            document.addEventListener('click', (event) => {
+                let clickedInsideCard = false;
+                cards.forEach(card => {
+                    if (card.contains(event.target)) {
+                        clickedInsideCard = true;
+                    }
+                });
+
+                if (!clickedInsideCard) {
+                    cards.forEach(c => {
+                        c.classList.remove('active');
+                        c.querySelector('.card-description-wrapper').style.maxHeight = '0px';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
