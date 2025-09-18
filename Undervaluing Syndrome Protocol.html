@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undervaluing Syndrome Protocol: Misjudgment & Disregard Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c;
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a;
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4;
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c;
+            --glow-red: #ff0055; /* Undervaluing agent's errors, ego, destructive actions */
+            --glow-blue: #00ffff; /* True value, potential, or undervalued person's state */
+            --glow-purple: #ff00ff;
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3);
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red);
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #flowchart-panel {
+            min-height: 750px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #value-perception-log-panel {
+            min-height: 750px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #value-perception-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #value-perception-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+        #value-perception-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #value-perception-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #value-perception-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #value-perception-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg .undervaluing-element {
+            fill: var(--glow-red);
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .true-value-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        .flow-box.highlight .box-icon svg path:not([class]),
+        .flow-box.highlight .box-icon svg circle:not([class]),
+        .flow-box.highlight .box-icon svg rect:not([class]),
+        .flow-box.highlight .box-icon svg polygon:not([class]),
+        .flow-box.highlight .box-icon svg line:not([class]),
+        .flow-box.highlight .box-icon svg .stroke-element:not([class]) {
+            fill: var(--text-light); /* Default elements become lighter */
+            stroke: var(--text-light);
+        }
+        
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. COGNITIVE BLIND SPOT / INITIAL MISCALIBRATION: Blurry eye, scattered data */
+        @keyframes blurPulse {
+            0%, 100% { filter: blur(0px); }
+            50% { filter: blur(1px); }
+        }
+        @keyframes dataScatter {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(3px, -2px); }
+            75% { transform: translate(-3px, 2px); }
+        }
+        .flow-box.highlight #blurry-eye { animation: blurPulse 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #scattered-data-1, .flow-box.highlight #scattered-data-2 { animation: dataScatter 1.5s ease-in-out infinite alternate; }
+
+        /* 2. EGO-PROTECTION FILTER / MINIMIZATION BIAS: Shadow over value, filter */
+        @keyframes shadowGrow {
+            0%, 100% { d: path("M50 80 Q60 60 70 80 H30 Q40 60 50 80 Z"); }
+            50% { d: path("M50 80 Q65 50 80 80 H20 Q35 50 50 80 Z"); }
+        }
+        @keyframes valueShrink {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.8); }
+        }
+        .flow-box.highlight #ego-shadow { animation: shadowGrow 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #minimized-value { animation: valueShrink 1.5s ease-in-out infinite alternate; }
+
+        /* 3. SELECTIVE EVIDENCE PROCESSING / VALUE SUPPRESSION: Tilted scale, data blocked */
+        @keyframes scaleTilt {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes dataBlock {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .flow-box.highlight #tilted-scale { animation: scaleTilt 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #blocked-data { animation: dataBlock 1s ease-in-out infinite alternate; }
+
+        /* 4. EXPRESSIVE DISREGARD / OVERT MARGINALIZATION: Megaphone down, figure shrinking */
+        @keyframes megaphonePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes figureShrink {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.8); opacity: 0.7; }
+        }
+        .flow-box.highlight #disregard-megaphone { animation: megaphonePulse 1s ease-in-out infinite alternate; }
+        .flow-box.highlight #shrinking-figure { animation: figureShrink 1.5s ease-in-out infinite alternate; }
+
+        /* 5. SQUANDERED POTENTIAL / LOST SYNERGY: Unlit bulb, fading potential */
+        @keyframes bulbFlicker {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes potentialFade {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.9); opacity: 0.5; }
+        }
+        .flow-box.highlight #unlit-bulb { animation: bulbFlicker 1.8s ease-in-out infinite alternate; }
+        .flow-box.highlight #fading-potential { animation: potentialFade 2s ease-in-out infinite alternate; }
+
+        /* 6. INTERNALIZED DEVALUATION / ERODING SELF-WORTH: Cracking figure */
+        @keyframes crackGrow {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        @keyframes figureCrumble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(2px); }
+        }
+        .flow-box.highlight #self-worth-crack { animation: crackGrow 1.5s ease-out forwards; }
+        .flow-box.highlight #crumbling-figure { animation: figureCrumble 1s ease-in-out infinite alternate; }
+        #self-worth-crack { opacity: 0; stroke-dasharray: 0 100; }
+
+        /* 7. PERFORMANCE RECESSION / ACTIVE DISENGAGEMENT: Downward arrow, figure walking away */
+        @keyframes arrowRecede {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+        @keyframes figureWalkAway {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+        .flow-box.highlight #recession-arrow { animation: arrowRecede 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #walking-away-figure { animation: figureWalkAway 1.5s ease-in-out infinite alternate; }
+
+        /* 8. VALUE REALIZATION LAG / POST-LOSS EPIPHANY: Lightbulb lights up belatedly */
+        @keyframes belatedGlow {
+            0% { opacity: 0; }
+            100% { opacity: 1; filter: drop-shadow(0 0 10px var(--glow-red)); }
+        }
+        @keyframes emptySpacePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .flow-box.highlight #belated-bulb-glow { animation: belatedGlow 1s ease-out forwards; }
+        .flow-box.highlight #empty-spot-magnify { animation: emptySpacePulse 2s ease-in-out infinite alternate; }
+        #belated-bulb-glow { opacity: 0; }
+
+        /* 9. CONSEQUENCE CYCLE / REGRET OR REPETITION: Broken chain or repeating loop */
+        @keyframes chainBreak {
+            0% { transform: rotate(0deg); opacity: 1; }
+            50% { transform: rotate(20deg); opacity: 0.8; }
+            100% { transform: rotate(0deg); opacity: 1; }
+        }
+        @keyframes loopGlow {
+            0%, 100% { stroke: var(--glow-red); }
+            50% { stroke: var(--highlight-red); }
+        }
+        .flow-box.highlight #broken-link { animation: chainBreak 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #consequence-loop { animation: loopGlow 2s ease-in-out infinite alternate; }
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 0;
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>UNDERVALUING SYNDROME PROTOCOL: MISJUDGMENT & DISREGARD ANALYSIS</h1>
+        <p class="subtitle">MAPPING THE COGNITIVE BIASES AND DESTRUCTIVE IMPACTS OF UNDERVALUING HIGH WORTH</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="blurry-eye" d="M50 25 C70 25, 80 40, 80 50 C80 60, 70 75, 50 75 C30 75, 20 60, 20 50 C20 40, 30 25, 50 25 Z" fill="var(--text-medium)"/>
+                            <rect id="scattered-data-1" x="30" y="40" width="8" height="8" fill="var(--glow-blue)" class="true-value-element"/>
+                            <rect id="scattered-data-2" x="60" y="60" width="8" height="8" fill="var(--glow-blue)" class="true-value-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">COGNITIVE BLIND SPOT / INITIAL MISCALIBRATION</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="ego-shadow" d="M50 80 Q60 60 70 80 H30 Q40 60 50 80 Z" fill="var(--glow-red)" class="undervaluing-element"/>
+                            <circle id="minimized-value" cx="50" cy="40" r="15" fill="var(--glow-blue)" class="true-value-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">EGO-PROTECTION FILTER / MINIMIZATION BIAS</div>
+                    <div class="small-text">[SELF-SERVING PERCEPTION]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <line id="tilted-scale" x1="20" y1="50" x2="80" y2="50" class="stroke-element" stroke-width="3"/>
+                            <line x1="50" y1="50" x2="50" y2="20" class="stroke-element"/>
+                            <rect x="25" y="55" width="20" height="10" fill="var(--glow-red)" class="undervaluing-element"/>
+                            <rect x="55" y="55" width="20" height="10" fill="var(--glow-blue)" class="true-value-element"/>
+                            <path id="blocked-data" d="M65 45 L65 35 L75 35 L75 45 Z" fill="var(--glow-blue)" class="true-value-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">SELECTIVE EVIDENCE PROCESSING / VALUE SUPPRESSION</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="disregard-megaphone" d="M70 30 H80 L60 50 L80 70 H70 L50 50 Z M50 50 L30 50 L30 40 L50 40 Z" fill="var(--glow-red)" class="undervaluing-element"/>
+                            <path id="shrinking-figure" d="M20 60 C15 60, 10 55, 20 55 C30 55, 25 60, 20 60 Z M20 65 L15 70 L25 70 Z" fill="var(--glow-blue)" class="true-value-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">EXPRESSIVE DISREGARD / OVERT MARGINALIZATION</div>
+                    <div class="small-text">[PUBLIC DISMISSAL]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="unlit-bulb" cx="50" cy="40" r="15" fill="none" stroke="var(--text-medium)" stroke-width="2"/>
+                            <path id="fading-potential" d="M50 60 L40 70 L60 70 Z M45 65 L55 65 Z" fill="var(--glow-blue)" class="true-value-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">SQUANDERED POTENTIAL / LOST SYNERGY</div>
+                    <div class="small-text">[UNRECOGNIZED ASSET]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="crumbling-figure" d="M50 30 C40 30, 35 20, 50 20 C65 20, 60 30, 50 30 Z M50 40 L40 50 L60 50 Z M45 60 L55 60 M50 50 L50 60" fill="var(--glow-blue)" class="true-value-element"/>
+                            <path id="self-worth-crack" d="M45 45 L55 55 M40 50 L50 60" stroke="var(--glow-red)" stroke-width="2" opacity="0" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INTERNALIZED DEVALUATION / ERODING SELF-WORTH</div>
+                    <div class="small-text">[CONFIDENCE DECAY]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <line x1="50" y1="20" x2="50" y2="80" class="stroke-element" stroke-dasharray="5 5"/>
+                            <path id="recession-arrow" d="M50 30 L45 35 L55 35 Z" fill="var(--glow-blue)" class="true-value-element"/>
+                            <path id="walking-away-figure" d="M30 65 Q50 80 70 65 Q50 50 30 65 Z M50 40 C40 40, 35 30, 50 30 C65 30, 60 40, 50 40 Z" fill="var(--glow-blue)" class="true-value-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">PERFORMANCE RECESSION / ACTIVE DISENGAGEMENT</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="40" r="15" fill="none" stroke="var(--text-medium)" stroke-width="2"/>
+                            <path id="belated-bulb-glow" d="M45 50 L50 55 L55 50 M50 55 L50 60 M40 60 Q50 65 60 60" fill="var(--glow-red)" class="undervaluing-element" opacity="0"/>
+                            <rect id="empty-spot-magnify" x="40" y="30" width="20" height="20" fill="none" stroke="var(--glow-red)" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">VALUE REALIZATION LAG / POST-LOSS EPIPHANY</div>
+                    <div class="small-text">[TOO LATE RECOGNITION]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <line x1="20" y1="50" x2="80" y2="50" class="stroke-element" stroke-dasharray="5 5"/>
+                            <circle id="broken-link" cx="30" cy="50" r="10" fill="none" stroke="var(--glow-red)" stroke-width="2"/>
+                            <circle cx="70" cy="50" r="10" fill="none" stroke="var(--glow-red)" stroke-width="2"/>
+                            <path id="consequence-loop" d="M50 40 A10 10 0 1 0 50 60 A10 10 0 1 0 50 40 Z" fill="none" stroke="var(--glow-red)" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">CONSEQUENCE CYCLE / REGRET OR REPETITION</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="value-perception-log-panel" class="dashboard-panel">
+            <h2>VALUE PERCEPTION LOG</h2>
+            <div id="value-perception-log-text">
+                <p>Welcome to the Undervaluing Syndrome Protocol Dashboard. This system analyzes the formation, impact, and consequences of underestimating another's true worth.</p>
+                <p>Use the navigation controls below to observe each stage, from initial miscalibration to the long-term cycle of regret or continued ignorance.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: COGNITIVE BLIND SPOT / INITIAL MISCALIBRATION</h2><p><strong>ANALYSIS:</strong> The initial failure to accurately assess another person\'s skills, potential, or overall value. This often stems from incomplete information, pre-existing biases, a lack of deep engagement, or simply a quick, superficial judgment.</p><p><strong>OBSERVATIONS:</strong> Overlooking subtle contributions, dismissing innovative ideas, judging based on superficial traits, failing to seek diverse perspectives, a quick "labeling" of an individual.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: EGO-PROTECTION FILTER / MINIMIZATION BIAS</h2><p><strong>ANALYSIS:</strong> The undervaluing individual\'s own insecurities or need for superiority drives them to actively diminish the perceived value of the other person. Elevating oneself by lowering others becomes an unconscious defense mechanism.</p><p><strong>OBSERVATIONS:</strong> Downplaying achievements, taking undue credit, subtle put-downs, constant comparison (often favorable to self), feeling threatened by the other\'s success.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: SELECTIVE EVIDENCE PROCESSING / VALUE SUPPRESSION</h2><p><strong>ANALYSIS:</strong> Information that supports the low valuation is preferentially sought, accepted, and remembered, while contradictory evidence (demonstrating the person\'s true worth) is ignored, reinterpreted negatively, or forgotten.</p><p><strong>OBSERVATIONS:</strong> Focusing on minor flaws, nitpicking, dismissing successes as luck or coincidence, creating mental narratives that reinforce the low opinion, active resistance to feedback that highlights the person\'s value.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: EXPRESSIVE DISREGARD / OVERT MARGINALIZATION</h2><p><strong>ANALYSIS:</strong> The internalized undervaluing manifests in observable behaviors and attitudes. This includes dismissive language, exclusion from key opportunities, lack of recognition, or treating the person as less capable or significant.</p><p><strong>OBSERVATIONS:</strong> Ignoring input in meetings, assigning menial tasks below skill level, condescending tone, public criticism without private praise, overlooking for promotions/rewards, subtle social exclusion.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: SQUANDERED POTENTIAL / LOST SYNERGY</h2><p><strong>ANALYSIS:</strong> Due to the persistent undervaluing, the full talents, insights, and energy of the high-value individual are never utilized. This results in missed opportunities, reduced innovation, and a net loss for the team, organization, or relationship.</p><p><strong>OBSERVATIONS:</strong> Stagnation in areas where the undervalued person could excel, repeated mistakes that could have been avoided with their input, a lack of progress due to missing key contributions, overall underperformance.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: INTERNALIZED DEVALUATION / ERODING SELF-WORTH</h2><p><strong>ANALYSIS:</strong> The sustained experience of being undervalued can lead the high-value individual to internalize this false perception. They begin to doubt their own abilities, skills, and worth, leading to decreased confidence and self-efficacy.</p><p><strong>OBSERVATIONS:</strong> Reduced self-advocacy, reluctance to share ideas, increased self-criticism, signs of imposter syndrome, generalized anxiety or depression, withdrawal from challenging tasks.</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: PERFORMANCE RECESSION / ACTIVE DISENGAGEMENT</h2><p><strong>ANALYSIS:</strong> As self-worth erodes and efforts go unrecognized, the undervalued individual becomes demotivated. Their performance may genuinely decline, or they may actively disengage, doing only the minimum required before eventually seeking recognition elsewhere.</p><p><strong>OBSERVATIONS:</strong> Noticeable drop in quality or quantity of work, increased absenteeism, lack of initiative, cynicism, actively searching for new opportunities, eventual departure.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: VALUE REALIZATION LAG / POST-LOSS EPIPHANY</h2><p><strong>ANALYSIS:</strong> The undervaluing party only realizes the true impact and contribution of the person much later, typically after they have left, or a significant crisis/loss exposes the void left behind. This realization is often belated and regretful.</p><p><strong>OBSERVATIONS:</strong> Sudden difficulty in tasks previously handled by the departed, a noticeable drop in team morale/productivity, explicit feedback from others about the lost talent, a scramble to fill a role previously deemed "unimportant."</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: CONSEQUENCE CYCLE / REGRET OR REPETITION</h2><p><strong>ANALYSIS:</strong> The long-term outcome. The undervaluing party either learns a painful lesson, leading to genuine regret and a change in behavior, or continues the pattern, blaming external factors for their losses, perpetuating the cycle with new victims. The undervalued person either thrives in a new environment or carries lasting scars.</p><p><strong>OBSERVATIONS:</strong> (Regret) Attempts to re-hire or reconcile, visible changes in management style, improved recognition processes. (Repetition) Continuing high turnover, chronic underperformance, blaming "bad luck" or "unmotivated staff," a pattern of talented individuals leaving.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const valuePerceptionLogText = document.getElementById('value-perception-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            // General reset for all SVG elements within boxes
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = ''; // Clear all animations
+                el.style.filter = '';    // Clear all filters (like drop-shadow)
+                el.style.transform = ''; // Clear all transforms
+                el.style.opacity = '';   // Clear explicit opacity if set during animation
+                el.style.strokeDasharray = ''; // Clear stroke dash array
+                el.style.strokeDashoffset = ''; // Clear stroke dash offset
+            });
+
+            // Specific opacity/visibility/state resets for elements that are hidden by default or fade in/out
+            // Box 1
+            // `blurry-eye` and `scattered-data` animations are on the elements themselves, driven by highlight class
+
+            // Box 2
+            document.getElementById('ego-shadow').style.d = 'M50 80 Q60 60 70 80 H30 Q40 60 50 80 Z'; // Reset path 'd' attribute
+            document.getElementById('minimized-value').style.transform = '';
+
+            // Box 3
+            document.getElementById('tilted-scale').style.transform = '';
+            document.getElementById('blocked-data').style.opacity = 1; // Reset to full opacity (its default)
+
+            // Box 4
+            document.getElementById('disregard-megaphone').style.transform = '';
+            document.getElementById('shrinking-figure').style.transform = '';
+            document.getElementById('shrinking-figure').style.opacity = 1;
+
+            // Box 5
+            document.getElementById('unlit-bulb').style.opacity = 0.3; // Default starting opacity
+            document.getElementById('fading-potential').style.transform = '';
+            document.getElementById('fading-potential').style.opacity = 1;
+
+            // Box 6
+            document.getElementById('crumbling-figure').style.transform = '';
+            document.getElementById('self-worth-crack').style.opacity = 0; // Explicitly set to hidden
+            document.getElementById('self-worth-crack').style.strokeDasharray = '0 100'; // Reset for re-drawing animation
+
+            // Box 7
+            document.getElementById('recession-arrow').style.transform = '';
+            document.getElementById('walking-away-figure').style.transform = '';
+
+            // Box 8
+            document.getElementById('belated-bulb-glow').style.opacity = 0; // Explicitly set to hidden
+            document.getElementById('belated-bulb-glow').style.filter = '';
+            document.getElementById('empty-spot-magnify').style.transform = '';
+
+            // Box 9
+            document.getElementById('broken-link').style.transform = '';
+            document.getElementById('broken-link').style.opacity = 1;
+            document.getElementById('consequence-loop').style.stroke = 'var(--glow-red)'; // Reset to initial stroke color
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                valuePerceptionLogText.innerHTML = '<p>Welcome to the Undervaluing Syndrome Protocol Dashboard. This system analyzes the formation, impact, and consequences of underestimating another\'s true worth.</p><p>Use the navigation controls below to observe each stage, from initial miscalibration to the long-term cycle of regret or continued ignorance.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                valuePerceptionLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-2':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-3':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-4':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-5':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-6':
+                        // `self-worth-crack` animation handles opacity from 0 to 1
+                        document.getElementById('self-worth-crack').style.opacity = 1; // Explicitly make visible for animation to play
+                        break;
+                    case 'box-7':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-8':
+                        // `belated-bulb-glow` animation handles opacity from 0 to 1
+                        document.getElementById('belated-bulb-glow').style.opacity = 1; // Explicitly make visible for animation to play
+                        break;
+                    case 'box-9':
+                        // Animations tied to CSS class highlight
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
