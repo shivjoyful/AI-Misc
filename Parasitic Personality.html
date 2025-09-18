@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathological Parasite Personality: Host Interaction Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c; /* Even darker base */
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a; /* Slightly lighter for panel */
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4; /* Cyan - for host elements */
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c; /* Still a strong red for danger/manipulation */
+            --glow-red: #ff0055; /* Neon Red - for parasitic elements */
+            --glow-blue: #00ffff; /* Neon Blue - for host elements */
+            --glow-purple: #ff00ff; /* Magenta */
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3); /* Subtle grid */
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px; /* Constrain header width */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red); /* Jealousy's primary glow color */
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Flowchart left (larger), Diagnosis Log right */
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px; /* Dashboard overall width */
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1); /* Red glow for theme */
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative; /* For nested absolute elements */
+        }
+
+        #flowchart-panel {
+            min-height: 750px; /* Fixed height for flowchart area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #host-interaction-log-panel {
+            min-height: 750px; /* Match flowchart height */
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #host-interaction-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #host-interaction-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto; /* Allow scrolling for long descriptions */
+            flex-grow: 1; /* Take up available space */
+            padding-right: 5px; /* For scrollbar not to cover text */
+        }
+        #host-interaction-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #host-interaction-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #host-interaction-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #host-interaction-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg #host-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        .flow-box.highlight .box-icon svg #parasite-element {
+            fill: var(--glow-red);
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg path:not([id]),
+        .flow-box.highlight .box-icon svg circle:not([id]),
+        .flow-box.highlight .box-icon svg rect:not([id]),
+        .flow-box.highlight .box-icon svg polygon:not([id]),
+        .flow-box.highlight .box-icon svg line:not([id]),
+        .flow-box.highlight .box-icon svg .stroke-element:not([id]) {
+            fill: var(--text-light); /* Default elements become lighter */
+            stroke: var(--text-light);
+        }
+
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. Identify Host: Scanning radar, vulnerable figure */
+        @keyframes radarScan {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes targetPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .flow-box.highlight #radar-line { animation: radarScan 2s linear infinite; }
+        .flow-box.highlight #vulnerable-host { animation: targetPulse 1.5s ease-in-out infinite alternate; }
+
+        /* 2. Ingratiate / Attach: Parasite vine growing */
+        @keyframes vineGrow {
+            0% { stroke-dasharray: 0 100; }
+            100% { stroke-dasharray: 100 0; }
+        }
+        .flow-box.highlight #parasite-vine { animation: vineGrow 2s ease-out forwards; }
+        #parasite-vine { stroke-dasharray: 0 100; }
+
+        /* 3. Extract Resources: Siphon draining */
+        @keyframes resourceDrain {
+            0% { r: 15; opacity: 1; }
+            100% { r: 5; opacity: 0.5; }
+        }
+        @keyframes fluidFlow {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -100; }
+        }
+        .flow-box.highlight #draining-resource { animation: resourceDrain 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #siphon-pipe { animation: fluidFlow 1s linear infinite; }
+        #siphon-pipe { stroke-dasharray: 10 5; }
+
+        /* 4. Maintain Control / Isolation: Cage closing */
+        @keyframes cageClose {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes parasiteHover {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .flow-box.highlight #host-cage { animation: cageClose 1s ease-out forwards; }
+        .flow-box.highlight #parasite-outside { animation: parasiteHover 1.5s ease-in-out infinite alternate 1s; }
+        #host-cage { transform: scale(0.5); opacity: 0; }
+        #parasite-outside { transform: translateY(0); }
+
+        /* 5. Justify Actions / Blame Shift: Distorted speech bubble */
+        @keyframes bubbleDistort {
+            0%, 100% { transform: scaleX(1) scaleY(1); }
+            50% { transform: scaleX(1.05) scaleY(0.95); }
+        }
+        @keyframes textGlitch {
+            0% { opacity: 1; transform: translateX(0); }
+            20% { opacity: 0.8; transform: translateX(2px); }
+            40% { opacity: 1; transform: translateX(-2px); }
+            60% { opacity: 0.8; transform: translateX(2px); }
+            80% { opacity: 1; transform: translateX(-2px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        .flow-box.highlight #blame-bubble { animation: bubbleDistort 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #blame-text { animation: textGlitch 0.5s linear infinite; }
+
+        /* 6. Escalate Demands: Weights increasing */
+        @keyframes weightDrop {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes hostStrain {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+        }
+        .flow-box.highlight #demand-weight-1 { animation: weightDrop 0.8s ease-out forwards; }
+        .flow-box.highlight #demand-weight-2 { animation: weightDrop 0.8s 0.3s ease-out forwards; }
+        .flow-box.highlight #demand-weight-3 { animation: weightDrop 0.8s 0.6s ease-out forwards; }
+        .flow-box.highlight #straining-host { animation: hostStrain 2s ease-in-out infinite alternate; }
+        #demand-weight-1, #demand-weight-2, #demand-weight-3 { opacity: 0; }
+
+        /* 7. Host Depletion / Resistance: Host cracking, parasite shaking */
+        @keyframes hostCracks {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        @keyframes parasiteShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+        }
+        .flow-box.highlight #depleted-host-crack { animation: hostCracks 1.5s ease-out forwards; }
+        .flow-box.highlight #attached-parasite { animation: parasiteShake 0.5s linear infinite; }
+        #depleted-host-crack { stroke-dasharray: 0 100; opacity: 0; }
+
+        /* 8. Discard Host: Host dissolving, parasite detaching */
+        @keyframes hostDissolve {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5) translateY(10px); }
+        }
+        @keyframes parasiteDetach {
+            0% { transform: translate(0,0); }
+            100% { transform: translate(20px, -10px); }
+        }
+        .flow-box.highlight #dissolving-host { animation: hostDissolve 1.5s ease-out forwards; }
+        .flow-box.highlight #detached-parasite { animation: parasiteDetach 1.5s ease-out forwards; }
+
+        /* 9. Seek New Host: Parasite moving to new target */
+        @keyframes parasiteTravel {
+            0% { transform: translateX(-20px); }
+            100% { transform: translateX(20px); }
+        }
+        @keyframes newHostGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .flow-box.highlight #traveling-parasite { animation: parasiteTravel 2s linear infinite alternate; }
+        .flow-box.highlight #new-vulnerable-host { animation: newHostGlow 1.5s ease-in-out infinite alternate; }
+
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center controls */
+            gap: 20px;
+            margin-top: 0; /* Already margin on dashboard-main */
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>PATHOLOGICAL PARASITE PERSONALITY PROTOCOL</h1>
+        <p class="subtitle">HOST INTERACTION DASHBOARD: ANALYZING EXPLOITATIVE BEHAVIORAL CYCLES</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="#2a2a4a" class="stroke-element"/>
+                            <line id="radar-line" x1="50" y1="50" x2="90" y2="50" class="stroke-element" stroke-width="2"/>
+                            <path id="vulnerable-host" d="M30 65 Q50 80 70 65 Q50 50 30 65 Z M50 40 C40 40, 35 30, 50 30 C65 30, 60 40, 50 40 Z" fill="var(--text-medium)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">IDENTIFY HOST</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="host-element" d="M30 65 Q50 80 70 65 Q50 50 30 65 Z M50 40 C40 40, 35 30, 50 30 C65 30, 60 40, 50 40 Z" fill="#2a2a4a"/>
+                            <path id="parasite-vine" d="M50 80 C55 80, 60 70, 60 60 C60 50, 55 40, 50 40 C45 40, 40 50, 40 60 C40 70, 45 80, 50 80 Z" fill="none" class="stroke-element" stroke-width="3" stroke="var(--glow-red)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INGRATIATE / ATTACH</div>
+                    <div class="small-text">[INITIAL RECONNAISSANCE]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="draining-resource" cx="30" cy="50" r="15" fill="var(--text-medium)"/>
+                            <rect x="50" y="30" width="20" height="20" fill="#2a2a4a"/>
+                            <path id="siphon-pipe" d="M45 50 H65 V70 H45 Z" fill="none" class="stroke-element" stroke-width="3" stroke="var(--glow-red)"/>
+                            <circle cx="55" cy="80" r="8" fill="#2a2a4a"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">EXTRACT RESOURCES</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <g id="host-cage">
+                                <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" rx="5"/>
+                                <line x1="30" y1="25" x2="30" y2="75" class="stroke-element"/>
+                                <line x1="70" y1="25" x2="70" y2="75" class="stroke-element"/>
+                                <line x1="25" y1="30" x2="75" y2="30" class="stroke-element"/>
+                                <line x1="25" y1="70" x2="75" y2="70" class="stroke-element"/>
+                            </g>
+                            <path id="host-element" d="M50 55 C40 55, 35 45, 50 45 C65 45, 60 55, 50 55 Z M50 65 Q50 70 50 65 Z" fill="var(--text-medium)"/>
+                            <circle id="parasite-outside" cx="80" cy="20" r="10" fill="var(--glow-red)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">MAINTAIN CONTROL / ISOLATION</div>
+                    <div class="small-text">[HOST CONTAINMENT]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a" rx="5"/>
+                            <path id="blame-bubble" d="M30 40 Q20 30 30 20 Q40 30 30 40 Z" fill="var(--text-medium)"/>
+                            <text id="blame-text" x="50" y="55" font-size="12" text-anchor="middle" fill="var(--text-medium)">"YOUR FAULT"</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">JUSTIFY ACTIONS / BLAME SHIFT</div>
+                    <div class="small-text">[REALITY DISTORTION]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="straining-host" d="M50 80 Q30 70 30 60 Q30 50 50 40 Q70 50 70 60 Q70 70 50 80 Z" fill="#2a2a4a"/>
+                            <rect id="demand-weight-1" x="40" y="30" width="20" height="10" fill="var(--text-medium)" opacity="0"/>
+                            <rect id="demand-weight-2" x="35" y="20" width="30" height="10" fill="var(--text-medium)" opacity="0"/>
+                            <rect id="demand-weight-3" x="30" y="10" width="40" height="10" fill="var(--text-medium)" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">ESCALATE DEMANDS</div>
+                    <div class="small-text">[PRESSURE BUILDUP]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="host-element" d="M50 80 Q30 70 30 60 Q30 50 50 40 Q70 50 70 60 Q70 70 50 80 Z" fill="#2a2a4a"/>
+                            <path id="depleted-host-crack" d="M40 55 L50 45 L60 55 M45 65 L55 55" fill="none" class="stroke-element" stroke="var(--glow-red)"/>
+                            <circle id="attached-parasite" cx="60" cy="35" r="10" fill="var(--glow-red)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">HOST DEPLETION / RESISTANCE</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="dissolving-host" d="M50 80 Q30 70 30 60 Q30 50 50 40 Q70 50 70 60 Q70 70 50 80 Z" fill="#2a2a4a"/>
+                            <circle id="detached-parasite" cx="60" cy="35" r="10" fill="var(--glow-red)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">DISCARD HOST</div>
+                    <div class="small-text">[RESOURCE EXHAUSTION]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="traveling-parasite" cx="30" cy="50" r="10" fill="var(--glow-red)"/>
+                            <path d="M40 50 H60" class="stroke-element"/>
+                            <path id="new-vulnerable-host" d="M70 65 Q90 80 90 65 Q70 50 70 65 Z M80 40 C70 40, 65 30, 80 30 C95 30, 90 40, 80 40 Z" fill="#2a2a4a"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">SEEK NEW HOST</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="host-interaction-log-panel" class="dashboard-panel">
+            <h2>HOST INTERACTION LOG</h2>
+            <div id="host-interaction-log-text">
+                <p>Welcome to the Pathological Parasite Personality Protocol Dashboard. This system visualizes the cyclical nature of exploitative relationships.</p>
+                <p>Use the navigation controls below to observe each stage, from initial targeting to the search for a new host.</p>
+                <p><strong>Status:</strong> Awaiting Data Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: IDENTIFY HOST</h2><p><strong>ANALYSIS:</strong> The parasitic individual scans their environment for potential hosts who possess desired resources (emotional, financial, social capital) and exhibit vulnerabilities (low self-esteem, empathy, loneliness).</p><p><strong>OBSERVATIONS:</strong> Initial charm offensive, probing questions about personal life, exaggerated empathy, or swift declaration of intense connection.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: INGRATIATE / ATTACH</h2><p><strong>ANALYSIS:</strong> Building a false rapport by mirroring the host\'s interests, values, and needs. Rapidly establishing a superficial bond to gain trust and access to the host\'s life.</p><p><strong>OBSERVATIONS:</strong> "Love bombing," creating a sense of shared destiny, positioning themselves as a savior or perfect companion, isolating the host from other support systems.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: EXTRACT RESOURCES</h2><p><strong>ANALYSIS:</strong> The core function of the parasitic relationship begins. The host\'s emotional energy, finances, time, social connections, or self-worth are systematically siphoned off to benefit the parasite.</p><p><strong>OBSERVATIONS:</strong> Frequent requests for favors/money, constant need for attention/validation, emotional manipulation (guilt trips, victimhood), using host connections for personal gain.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: MAINTAIN CONTROL / ISOLATION</h2><p><strong>ANALYSIS:</strong> The parasite employs tactics to ensure the host remains available and dependent. This includes undermining the host\'s confidence, isolating them from supportive networks, or creating emotional dependency.</p><p><strong>OBSERVATIONS:</strong> Criticism of host\'s friends/family, gaslighting, creating drama to divert attention, cultivating a "us against the world" mentality, emotional blackmail.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: JUSTIFY ACTIONS / BLAME SHIFT</h2><p><strong>ANALYSIS:</strong> Any negative consequences of the parasite\'s behavior are deflected onto the host. The host is made to feel responsible for the parasite\'s actions, reinforcing control and guilt.</p><p><strong>OBSERVATIONS:</strong> Refusal to take responsibility, accusing the host of being too sensitive/demanding, rewriting history, projecting their own flaws onto the host.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: ESCALATE DEMANDS</h2><p><strong>ANALYSIS:</strong> As the host becomes more invested or depleted, the parasite\'s demands increase. Boundaries are pushed, and the host\'s capacity to give is stretched to its breaking point.</p><p><strong>OBSERVATIONS:</strong> Asking for more significant favors/money, requiring more time/attention, increased emotional intensity, disregard for host\'s well-being or schedule.</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: HOST DEPLETION / RESISTANCE</h2><p><strong>ANALYSIS:</strong> The host\'s resources are severely diminished, or their tolerance for abuse reaches its limit. They may exhibit signs of exhaustion, depression, or finally begin to assert boundaries or pull away.</p><p><strong>OBSERVATIONS:</strong> Host expresses fatigue/frustration, withdrawal from the parasite, attempts to reclaim personal time/resources, emotional numbness, physical signs of stress.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: DISCARD HOST</h2><p><strong>ANALYSIS:</strong> Once the host is fully drained, no longer serves a purpose, or becomes too difficult to manage, the parasite detaches abruptly and without remorse, often leaving the host bewildered and damaged.</p><p><strong>OBSERVATIONS:</strong> Sudden ghosting, brutal devaluation, finding minor pretexts to end the relationship, immediate shift of attention to a new target, complete lack of empathy.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: SEEK NEW HOST</h2><p><strong>ANALYSIS:</strong> The cycle restarts. The parasite quickly moves on to identify a new vulnerable individual to attach to, replicating the pattern of exploitation and discard.</p><p><strong>OBSERVATIONS:</strong> Rapid formation of intense new relationships, repetition of previous "love bombing" tactics with a new individual, continued denial of past destructive behavior.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const hostInteractionLogText = document.getElementById('host-interaction-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = '';
+                el.style.filter = '';
+                el.style.transform = '';
+            });
+
+            // Specific opacity/visibility resets for elements that are hidden by default or fade in
+            // Box 1
+            document.getElementById('vulnerable-host').style.opacity = 1; // Default state for host
+            // Box 2
+            document.getElementById('parasite-vine').style.strokeDasharray = '0 100'; // Reset vine to invisible
+            // Box 3
+            document.getElementById('draining-resource').setAttribute('r', '15');
+            document.getElementById('draining-resource').style.opacity = 1;
+            document.getElementById('siphon-pipe').style.strokeDashoffset = '0';
+            // Box 4
+            document.getElementById('host-cage').style.transform = 'scale(0.5)';
+            document.getElementById('host-cage').style.opacity = 0;
+            document.getElementById('parasite-outside').style.transform = '';
+            // Box 5
+            document.getElementById('blame-bubble').style.transform = '';
+            document.getElementById('blame-text').style.transform = '';
+            // Box 6
+            document.getElementById('demand-weight-1').style.opacity = 0;
+            document.getElementById('demand-weight-2').style.opacity = 0;
+            document.getElementById('demand-weight-3').style.opacity = 0;
+            document.getElementById('straining-host').style.transform = '';
+            // Box 7
+            document.getElementById('depleted-host-crack').style.strokeDasharray = '0 100';
+            document.getElementById('attached-parasite').style.transform = '';
+            // Box 8
+            document.getElementById('dissolving-host').style.opacity = 1;
+            document.getElementById('dissolving-host').style.transform = '';
+            document.getElementById('detached-parasite').style.transform = '';
+            // Box 9
+            document.getElementById('traveling-parasite').style.transform = '';
+            document.getElementById('new-vulnerable-host').style.opacity = 1;
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                hostInteractionLogText.innerHTML = '<p>Welcome to the Pathological Parasite Personality Protocol Dashboard. This system visualizes the cyclical nature of exploitative relationships.</p><p>Use the navigation controls below to observe each stage, from initial targeting to the search for a new host.</p><p><strong>Status:</strong> Awaiting Data Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                hostInteractionLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-2':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-3':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-4':
+                        document.getElementById('host-cage').style.opacity = 1;
+                        document.getElementById('host-cage').style.transform = 'scale(1)';
+                        break;
+                    case 'box-5':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-6':
+                        document.getElementById('demand-weight-1').style.opacity = 1;
+                        document.getElementById('demand-weight-2').style.opacity = 1;
+                        document.getElementById('demand-weight-3').style.opacity = 1;
+                        break;
+                    case 'box-7':
+                        document.getElementById('depleted-host-crack').style.opacity = 1;
+                        break;
+                    case 'box-8':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-9':
+                        // Animations tied to CSS class highlight
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
