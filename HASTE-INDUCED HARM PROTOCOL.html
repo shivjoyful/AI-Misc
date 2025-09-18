@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASTE-INDUCED HARM PROTOCOL: Unverified Judgment & Impulsive Action Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c;
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a;
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4;
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c;
+            --glow-red: #ff0055; /* Hasty actions, harm, negative outcomes */
+            --glow-blue: #00ffff; /* Hidden truth, harmed party, revelation */
+            --glow-purple: #ff00ff;
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3);
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red);
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #flowchart-panel {
+            min-height: 750px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #consequence-trajectory-log-panel {
+            min-height: 750px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #consequence-trajectory-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #consequence-trajectory-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+        #consequence-trajectory-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #consequence-trajectory-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #consequence-trajectory-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #consequence-trajectory-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg .hasty-element {
+            fill: var(--glow-red);
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .truth-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        .flow-box.highlight .box-icon svg path:not([class]),
+        .flow-box.highlight .box-icon svg circle:not([class]),
+        .flow-box.highlight .box-icon svg rect:not([class]),
+        .flow-box.highlight .box-icon svg polygon:not([class]),
+        .flow-box.highlight .box-icon svg line:not([class]),
+        .flow-box.highlight .box-icon svg .stroke-element:not([class]) {
+            fill: var(--text-light); /* Default elements become lighter */
+            stroke: var(--text-light);
+        }
+        
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. INITIAL INFORMATION GAP / MISSING DATA: File with ? and disappearing data */
+        @keyframes questionMarkPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        @keyframes dataFragmentFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .flow-box.highlight #data-question-mark { animation: questionMarkPulse 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #data-fragment-1, .flow-box.highlight #data-fragment-2 { animation: dataFragmentFlicker 0.8s steps(1) infinite; }
+
+        /* 2. LACK OF VERIFICATION / ASSUMPTION JUMP: Figure leaping over gap */
+        @keyframes leapMotion {
+            0% { transform: translateX(-30px); }
+            100% { transform: translateX(30px); }
+        }
+        @keyframes bridgeUnstable {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(2px); }
+        }
+        .flow-box.highlight #leaping-figure { animation: leapMotion 1s ease-in-out forwards; }
+        .flow-box.highlight #broken-bridge-left, .flow-box.highlight #broken-bridge-right { animation: bridgeUnstable 1.5s ease-in-out infinite alternate; }
+        #leaping-figure { transform: translateX(-30px); } /* Initial position */
+
+        /* 3. RAPID JUDGMENT / PRESUMPTIVE CONCLUSION: Brain with bold X */
+        @keyframes verdictForm {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes brainFlash {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--glow-blue)); }
+            50% { filter: drop-shadow(0 0 8px var(--glow-red)); }
+        }
+        .flow-box.highlight #judgment-brain { animation: brainFlash 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #bold-x { animation: verdictForm 0.5s ease-out forwards; }
+        #bold-x { opacity: 0; transform: scale(0); } /* Initial state */
+
+        /* 4. EMOTIONAL ESCALATION / IMPULSE OVERRIDE: Fiery heart engulfing logic */
+        @keyframes heartFlare {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes logicDim {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        .flow-box.highlight #fiery-heart { animation: heartFlare 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #logic-symbol { animation: logicDim 1.5s ease-in-out infinite alternate; }
+
+        /* 5. HASTY ACTION / RUSHED EXECUTION: Blurred hand striking */
+        @keyframes handStrike {
+            0% { transform: translateX(-20px) scaleX(1); }
+            50% { transform: translateX(0px) scaleX(1.2); }
+            100% { transform: translateX(20px) scaleX(1); }
+        }
+        @keyframes motionTrailDraw {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        .flow-box.highlight #hasty-hand { animation: handStrike 0.6s ease-out infinite alternate; }
+        .flow-box.highlight #motion-trail { animation: motionTrailDraw 0.6s ease-out forwards; }
+        #motion-trail { opacity: 0; stroke-dasharray: 0 100; } /* Initial state */
+
+        /* 6. DIRECT HARM INFLICTED / UNINTENDED CONSEQUENCE: Person with crack */
+        @keyframes harmImpactPulse {
+            0%, 100% { stroke-width: 2px; }
+            50% { stroke-width: 4px; }
+        }
+        @keyframes figureWince {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        .flow-box.highlight #harmed-figure { animation: figureWince 1s ease-in-out infinite alternate; }
+        .flow-box.highlight #harm-crack { animation: harmImpactPulse 1s ease-in-out infinite alternate; }
+        #harm-crack { opacity: 0; } /* Initial state */
+
+        /* 7. UNVEILING OF TRUTH / ERROR REVELATION: Spotlight on fact */
+        @keyframes spotlightReveal {
+            0% { transform: scaleX(0.1); opacity: 0; }
+            100% { transform: scaleX(1); opacity: 1; }
+        }
+        @keyframes factGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .flow-box.highlight #spotlight-beam { animation: spotlightReveal 1s ease-out forwards; transform-origin: left center;}
+        .flow-box.highlight #revealed-fact { animation: factGlow 1.5s ease-in-out infinite alternate 1s; }
+        #spotlight-beam, #revealed-fact { opacity: 0; } /* Initial state */
+
+        /* 8. IMPACT ON HARMED PARTY / WOUNDED RECIPIENT: Shattered figure */
+        @keyframes shatterEffect {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            25% { transform: translateY(-1px) translateX(1px); opacity: 0.9; }
+            75% { transform: translateY(1px) translateX(-1px); opacity: 0.9; }
+        }
+        @keyframes glowBluePain {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--glow-blue)); }
+            50% { filter: drop-shadow(0 0 5px var(--glow-blue)); }
+        }
+        .flow-box.highlight #shattered-figure { animation: shatterEffect 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #shattered-figure path { animation: glowBluePain 2s ease-in-out infinite alternate; }
+
+        /* 9. CONSEQUENCE FOR HASTY ACTOR / REGRET & RECKONING: Hand to face, broken mirror */
+        @keyframes faceReact {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        @keyframes mirrorBreak {
+            0%, 100% { transform: rotate(0deg); opacity: 1; }
+            50% { transform: rotate(5deg); opacity: 0.8; }
+        }
+        .flow-box.highlight #regret-face { animation: faceReact 1.8s ease-in-out infinite alternate; }
+        .flow-box.highlight #broken-mirror-frame { animation: mirrorBreak 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #broken-mirror-shards { animation: mirrorBreak 2s ease-in-out infinite alternate; }
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 0;
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>HASTE-INDUCED HARM PROTOCOL: UNVERIFIED JUDGMENT & IMPULSIVE ACTION ANALYSIS</h1>
+        <p class="subtitle">MAPPING THE DESTRUCTIVE PATH FROM UNKOWN TRUTH TO UNINTENDED CONSEQUENCES</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow, visually) -->
+                    <line id="arrow-3-vert-4" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-vert-7" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" class="stroke-element"/>
+                            <path d="M50 35 C55 35, 55 40, 50 40 L50 55 C50 60, 45 60, 45 55" class="hasty-element" stroke="var(--text-medium)" fill="none" stroke-width="2"/>
+                            <circle id="data-question-mark" cx="50" cy="65" r="5" fill="var(--text-medium)"/>
+                            <rect id="data-fragment-1" x="30" y="30" width="8" height="8" fill="var(--glow-blue)" class="truth-element"/>
+                            <rect id="data-fragment-2" x="60" y="60" width="8" height="8" fill="var(--glow-blue)" class="truth-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INITIAL INFORMATION GAP / MISSING DATA</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="broken-bridge-left" x="20" y="60" width="25" height="5" fill="#2a2a4a" class="stroke-element hasty-element"/>
+                            <rect id="broken-bridge-right" x="55" y="60" width="25" height="5" fill="#2a2a4a" class="stroke-element hasty-element"/>
+                            <path id="leaping-figure" d="M40 30 C30 30, 25 20, 40 20 C55 20, 50 30, 40 30 Z M40 40 L30 50 L50 50 Z M35 60 L45 60 M40 50 L40 60" fill="var(--glow-red)" class="hasty-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">LACK OF VERIFICATION / ASSUMPTION JUMP</div>
+                    <div class="small-text">[LEAP OF UNFAITH]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="judgment-brain" d="M50 20 C70 20, 80 40, 80 50 C80 60, 70 80, 50 80 C30 80, 20 60, 20 50 C20 40, 30 20, 50 20 Z" fill="#2a2a4a" class="stroke-element"/>
+                            <text id="bold-x" x="50" y="55" font-size="40" text-anchor="middle" fill="var(--glow-red)" class="hasty-element">X</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">RAPID JUDGMENT / PRESUMPTIVE CONCLUSION</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="fiery-heart" d="M50 80 L25 55 C10 40, 30 15, 50 40 C70 15, 90 40, 75 55 L50 80 Z" fill="var(--glow-red)" class="hasty-element"/>
+                            <rect x="40" y="30" width="20" height="20" fill="#2a2a4a" class="stroke-element"/>
+                            <text id="logic-symbol" x="50" y="45" font-size="20" text-anchor="middle" fill="var(--glow-blue)" class="truth-element">&#8743;</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">EMOTIONAL ESCALATION / IMPULSE OVERRIDE</div>
+                    <div class="small-text">[LOGIC SUPPRESSION]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="hasty-hand" d="M20 50 L40 40 L60 50 L40 60 Z M60 50 L80 50" fill="var(--glow-red)" class="hasty-element"/>
+                            <line id="motion-trail" x1="20" y1="50" x2="80" y2="50" stroke="var(--glow-red)" stroke-width="2" class="stroke-element hasty-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">HASTY ACTION / RUSHED EXECUTION</div>
+                    <div class="small-text">[NO PAUSE, NO REASON]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="harmed-figure" d="M50 30 C40 30, 35 20, 50 20 C65 20, 60 30, 50 30 Z M50 40 L40 50 L60 50 Z M45 60 L55 60 M50 50 L50 60" fill="var(--glow-blue)" class="truth-element"/>
+                            <path id="harm-crack" d="M40 45 L60 55 M50 40 L50 60" stroke="var(--glow-red)" stroke-width="2" fill="none" class="hasty-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">DIRECT HARM INFLICTED / UNINTENDED CONSEQUENCE</div>
+                    <div class="small-text">[IRREVERSIBLE IMPACT]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a"/>
+                            <rect id="spotlight-beam" x="20" y="20" width="60" height="60" fill="white" opacity="0"/>
+                            <circle id="revealed-fact" cx="50" cy="50" r="10" fill="var(--glow-blue)" class="truth-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">UNVEILING OF TRUTH / ERROR REVELATION</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="shattered-figure" d="M50 30 C40 30, 35 20, 50 20 C65 20, 60 30, 50 30 Z M50 40 L40 50 L60 50 Z M45 60 L55 60 M50 50 L50 60" fill="var(--glow-blue)" class="truth-element"/>
+                            <path d="M40 40 L45 35 L55 45 L60 40 M45 55 L55 60 L50 65" stroke="var(--glow-red)" stroke-width="1" fill="none" class="hasty-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">IMPACT ON HARMED PARTY / WOUNDED RECIPIENT</div>
+                    <div class="small-text">[LASTING SCARS]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="broken-mirror-frame" x="20" y="20" width="60" height="60" fill="#2a2a4a" stroke="var(--text-medium)" stroke-width="2"/>
+                            <path id="regret-face" d="M50 60 C40 60, 35 50, 50 50 C65 50, 60 60, 50 60 Z M50 70 C45 75, 55 75, 50 70 Z" fill="var(--glow-red)" class="hasty-element"/>
+                            <line id="broken-mirror-shards" x1="30" y1="30" x2="70" y2="70" stroke="var(--glow-blue)" stroke-width="1" class="truth-element"/>
+                            <line x1="70" y1="30" x2="30" y2="70" stroke="var(--glow-blue)" stroke-width="1" class="truth-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">CONSEQUENCE FOR HASTY ACTOR / REGRET & RECKONING</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="consequence-trajectory-log-panel" class="dashboard-panel">
+            <h2>CONSEQUENCE TRAJECTORY LOG</h2>
+            <div id="consequence-trajectory-log-text">
+                <p>Welcome to the Haste-Induced Harm Protocol Dashboard. This system analyzes the dangerous chain of events that can occur when action precedes truth.</p>
+                <p>Use the navigation controls below to observe each stage, from the initial missing information to the eventual regret and reckoning.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: INITIAL INFORMATION GAP / MISSING DATA</h2><p><strong>ANALYSIS:</strong> The fundamental problem begins with an incomplete understanding of a situation, a person, or available facts. Crucial data points are either absent, obscured, or misinterpreted, forming a flawed foundation for any subsequent judgment.</p><p><strong>OBSERVATIONS:</strong> Relying on rumors, acting on partial reports, failing to ask clarifying questions, a situation with inherent ambiguity, making assumptions where concrete evidence is needed.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: LACK OF VERIFICATION / ASSUMPTION JUMP</h2><p><strong>ANALYSIS:</strong> Instead of pausing to gather more information or verify initial impressions, the individual bypasses critical assessment. A "leap" is made directly to a conclusion, filling the information gap with presumptions rather than facts.</p><p><strong>OBSERVATIONS:</strong> Dismissing the need for further investigation, internalizing initial guesses as truth, interpreting silence as guilt, allowing biases to prematurely close the investigative phase.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: RAPID JUDGMENT / PRESUMPTIVE CONCLUSION</h2><p><strong>ANALYSIS:</strong> Based on the assumed information, a quick and often harsh judgment is formed. This conclusion becomes rigid, resistant to subsequent conflicting data, and serves as the perceived "truth" from which all further actions will stem.</p><p><strong>OBSERVATIONS:</strong> Forming strong opinions instantly, labeling individuals or situations based on first impressions, expressing definitive statements without complete knowledge, black-and-white thinking.</p>' },
+            { id: 'box-4', arrow: null, description: '<h2>STAGE 4: EMOTIONAL ESCALATION / IMPULSE OVERRIDE</h2><p><strong>ANALYSIS:</strong> The rapid judgment often triggers a strong emotional response (anger, fear, indignation, urgency). This emotional state overrides rational thought processes, creating a powerful impulse to act immediately without considering consequences or alternative solutions.</p><p><strong>OBSERVATIONS:</strong> Outbursts of temper, quick to offense, a feeling of "needing to do something NOW," ignoring advice to calm down or think, a visceral reaction to the perceived situation.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: HASTY ACTION / RUSHED EXECUTION</h2><p><strong>ANALYSIS:</strong> Driven by the strong emotional impulse and the unchallenged presumptive conclusion, an action is swiftly executed. This action is typically reactive, poorly planned, and lacks the foresight or consideration that a more deliberate approach would entail.</p><p><strong>OBSERVATIONS:</strong> Sending an angry message, making a quick accusation, terminating a relationship/agreement without discussion, acting aggressively, engaging in public shaming or confrontation.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: DIRECT HARM INFLICTED / UNINTENDED CONSEQUENCE</h2><p><strong>ANALYSIS:</strong> The hasty action, based on incomplete truth and emotional impulse, directly causes negative consequences for the other party. This harm can be reputational, emotional, financial, or physical, and is often disproportionate to the actual (or initially perceived) offense.</p><p><strong>OBSERVATIONS:</strong> Damaged reputation, emotional distress, loss of trust, professional setbacks, social ostracization, material losses, physical injury (in extreme cases).</p>' },
+            { id: 'box-7', arrow: null, description: '<h2>STAGE 7: UNVEILING OF TRUTH / ERROR REVELATION</h2><p><strong>ANALYSIS:</strong> Eventually, the complete truth of the situation comes to light. This revelation exposes the initial information gap, the flawed assumptions, and the erroneous judgment that underpinned the hasty action. The contrast between the presumed reality and the actual reality becomes clear.</p><p><strong>OBSERVATIONS:</strong> New evidence surfaces, a third-party explanation clarifies, the "harmed" party presents their side, self-reflection (often painful) reveals cognitive errors, undeniable facts emerge.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: IMPACT ON HARMED PARTY / WOUNDED RECIPIENT</h2><p><strong>ANALYSIS:</strong> The person who suffered the harm grapples with the fallout. Even with the truth revealed, the damage done can be lasting. Trust is broken, emotional wounds persist, and their perception of the hasty actor and potentially the world around them is significantly altered.</p><p><strong>OBSERVATIONS:</strong> Continued emotional distress, difficulty rebuilding trust, social withdrawal, cynicism, trauma responses, long-term impact on relationships or career.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: CONSEQUENCE FOR HASTY ACTOR / REGRET & RECKONING</h2><p><strong>ANALYSIS:</strong> The hasty actor faces the consequences of their actions. This can range from profound regret and attempts at reconciliation to damaged reputation, social isolation, or even professional repercussions. Learning from the error is possible, but not guaranteed; some may choose to rationalize or double down.</p><p><strong>OBSERVATIONS:</strong> Feelings of guilt or shame, public apology (sincere or forced), loss of respect from peers, damaged relationships, potential legal/professional penalties, or alternatively, defensiveness and refusal to accept responsibility.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const consequenceTrajectoryLogText = document.getElementById('consequence-trajectory-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            // General reset for all SVG elements within boxes
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = ''; // Clear all animations
+                el.style.filter = '';    // Clear all filters (like drop-shadow)
+                el.style.transform = ''; // Clear all transforms
+                el.style.opacity = '';   // Clear explicit opacity if set during animation
+                el.style.strokeDasharray = ''; // Clear stroke dash array
+                el.style.strokeDashoffset = ''; // Clear stroke dash offset
+            });
+
+            // Specific opacity/visibility/state resets for elements that are hidden by default or fade in/out
+            // Box 1
+            // `data-question-mark`, `data-fragment-1`, `data-fragment-2` animations are on the elements themselves.
+
+            // Box 2
+            document.getElementById('leaping-figure').style.transform = 'translateX(-30px)'; // Reset initial position
+
+            // Box 3
+            document.getElementById('bold-x').style.opacity = 0; // Reset to hidden
+            document.getElementById('bold-x').style.transform = 'scale(0)'; // Reset to initial scale
+
+            // Box 4
+            document.getElementById('logic-symbol').style.opacity = 1;
+            document.getElementById('logic-symbol').style.transform = 'scale(1)';
+
+            // Box 5
+            document.getElementById('motion-trail').style.opacity = 0; // Reset to hidden
+            document.getElementById('motion-trail').style.strokeDasharray = '0 100'; // Reset for re-drawing animation
+
+            // Box 6
+            document.getElementById('harm-crack').style.opacity = 0; // Reset to hidden
+
+            // Box 7
+            document.getElementById('spotlight-beam').style.opacity = 0; // Reset to hidden
+            document.getElementById('spotlight-beam').style.transform = 'scaleX(0.1)'; // Reset initial scale
+            document.getElementById('revealed-fact').style.opacity = 0; // Reset to hidden
+
+            // Box 8
+            // `shattered-figure` path elements animations are on the elements themselves.
+
+            // Box 9
+            // `regret-face`, `broken-mirror-frame`, `broken-mirror-shards` animations are on the elements themselves.
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                consequenceTrajectoryLogText.innerHTML = '<p>Welcome to the Haste-Induced Harm Protocol Dashboard. This system analyzes the dangerous chain of events that can occur when action precedes truth.</p><p>Use the navigation controls below to observe each stage, from the initial missing information to the eventual regret and reckoning.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                consequenceTrajectoryLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                // Important: Only add the 'highlight' class or start animations.
+                // Do NOT set opacity=1 here if the CSS animation itself controls opacity from 0 to 1 with `forwards`.
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        break;
+                    case 'box-2':
+                        break;
+                    case 'box-3':
+                        // `bold-x` animation handles its own opacity and transform from 0 to 1/1.2/1
+                        break;
+                    case 'box-4':
+                        break;
+                    case 'box-5':
+                        // `motion-trail` animation handles its own opacity and stroke-dasharray from 0 to 1/100
+                        break;
+                    case 'box-6':
+                        document.getElementById('harm-crack').style.opacity = 1; // Make visible for its infinite animation
+                        break;
+                    case 'box-7':
+                        // `spotlight-beam` and `revealed-fact` animations handle their own opacity and transform from 0 to 1
+                        document.getElementById('spotlight-beam').style.opacity = 1; // Start from here
+                        document.getElementById('revealed-fact').style.opacity = 1; // Start from here
+                        break;
+                    case 'box-8':
+                        break;
+                    case 'box-9':
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
