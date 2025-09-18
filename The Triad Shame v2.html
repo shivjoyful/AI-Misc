@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/// CLASSIFIED: PROJECT CERBERUS EXPOSÉ ///</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* BASE & TYPOGRAPHY */
+        :root {
+            --bg-dark: #0a0a0c;
+            --text-light: #e0e0e0;
+            --accent-purple: #8e24aa;
+            --accent-blue: #00bcd4;
+            --border-grey: #2c2c30;
+            --hover-light: #3a3a40;
+            --glow-color: #a448c4;
+            --error-red: #d32f2f;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            line-height: 1.7;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            font-size: 0.95em;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: linear-gradient(145deg, #1a1a1d, #0d0d10);
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(var(--glow-color), 0.2), 0 0 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-grey);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER & INTRO */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-purple);
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 3.2em;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px var(--glow-color);
+            animation: pulse-glow 3s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            from { text-shadow: 0 0 10px var(--glow-color), 0 0 20px rgba(var(--glow-color), 0.4); }
+            to { text-shadow: 0 0 15px var(--glow-color), 0 0 30px rgba(var(--glow-color), 0.6); }
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            color: #b0b0b0;
+        }
+
+        /* SECTION HEADERS & CONTENT */
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--accent-purple);
+            padding-bottom: 15px;
+            margin-top: 60px;
+            font-size: 2.2em;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(var(--accent-blue), 0.5);
+        }
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-purple);
+            margin-top: 35px;
+            font-size: 1.7em;
+            letter-spacing: 0.5px;
+        }
+
+        p { margin-bottom: 18px; text-align: justify; }
+
+        .section-header {
+            cursor: pointer;
+            background-color: #1c1c20;
+            padding: 20px 25px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: 1px solid var(--border-grey);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(var(--accent-purple), 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        .section-header:hover::before {
+            left: 100%;
+        }
+        .section-header:hover {
+            background-color: var(--hover-light);
+            transform: translateY(-2px);
+            border-color: var(--accent-purple);
+        }
+
+        .section-content {
+            display: none;
+            padding: 25px 30px;
+            border-left: 3px solid var(--accent-blue);
+            background-color: #141416;
+            border-radius: 0 0 8px 8px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(var(--accent-blue), 0.1);
+        }
+        .section-content.active {
+            display: block;
+            animation: slideIn 0.4s ease-out forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-icon {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.6em;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px rgba(var(--accent-blue), 0.7);
+        }
+
+        /* LISTS */
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        ul li {
+            position: relative;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            color: #c0c0c0;
+        }
+        ul li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1.2em;
+            top: -2px;
+            text-shadow: 0 0 3px rgba(var(--accent-blue), 0.5);
+        }
+
+        /* QUOTES & HIGHLIGHTS */
+        .quote {
+            font-style: italic;
+            color: #a0a0a0;
+            border-left: 4px solid var(--error-red);
+            padding-left: 20px;
+            margin: 25px 0;
+            background-color: #1e1416;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 8px rgba(var(--error-red), 0.2);
+        }
+        .highlight {
+            background-color: rgba(var(--accent-purple), 0.2);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--glow-color);
+            border: 1px dashed rgba(var(--glow-color), 0.5);
+            text-shadow: 0 0 5px rgba(var(--glow-color), 0.5);
+        }
+
+        /* CHARACTER CARDS */
+        .character-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background: #1e1e22;
+            padding: 20px;
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .character-card:hover {
+            transform: scale(1.01);
+            border-color: var(--accent-blue);
+        }
+        .character-card img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin-right: 25px;
+            object-fit: cover;
+            border: 3px solid var(--accent-purple);
+            box-shadow: 0 0 10px rgba(var(--accent-purple), 0.5);
+        }
+        .character-card h4 {
+            margin: 0;
+            color: var(--accent-blue);
+            font-size: 1.4em;
+            text-shadow: 0 0 5px rgba(var(--accent-blue), 0.3);
+        }
+        .character-card p {
+            margin: 5px 0 0;
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: #b0b0b0;
+        }
+
+        /* INTERACTIVE PROMPTS */
+        .interactive-prompt {
+            background-color: #121214;
+            padding: 18px;
+            border-radius: 6px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--accent-blue);
+            font-style: italic;
+            color: var(--accent-blue);
+            font-size: 0.95em;
+            box-shadow: inset 0 0 8px rgba(var(--accent-blue), 0.2);
+            display: flex;
+            align-items: center;
+        }
+        .interactive-prompt strong {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-color);
+            margin-right: 10px;
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+        .interactive-prompt .button {
+            background-color: var(--accent-purple);
+            color: var(--text-light);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .interactive-prompt .button:hover {
+            background-color: var(--glow-color);
+            transform: translateY(-1px);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px dashed var(--border-grey);
+            font-size: 0.9em;
+            color: #707075;
+            text-shadow: 0 0 3px rgba(0,0,0,0.5);
+        }
+
+        /* DYNAMIC BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 L 0 40" fill="none" stroke="%231a1a1d" stroke-width="1"></path></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)" /></svg>');
+            opacity: 0.2;
+            z-index: 0;
+            animation: moveGrid 60s linear infinite;
+        }
+        @keyframes moveGrid {
+            from { background-position: 0 0; }
+            to { background-position: 40px 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>/// CLASSIFIED: PROJECT CERBERUS EXPOSÉ ///</h1>
+        <p class="intro-text">Access Log: <strong><span id="timestamp"></span></strong>. Initiating data stream on <strong>The Triad of Treachery</strong>. This document details the systematic subversion of public trust, the weaponization of science, and the ultimate unmasking of a conspiracy that threatened the very fabric of society. Proceed with caution; sensitive material follows.</p>
+
+        <!-- Section 1: The Architects of Deception -->
+        <div class="section-header">
+            <h2>[DATASTREAM_01]: The Architects of Deception - Project Cerberus Personnel Files</h2>
+            <span class="toggle-icon">+</span>
+        </div>
+        <div class="section-content">
+            <p>At the apex of this chilling conspiracy stood three men, each a titan in his respective field, yet united by a singular, insatiable hunger for power and wealth. Their alliance, code-named <span class="highlight">"Project Cerberus"</span> by investigators, was forged in the clandestine corners of ambition, blending scientific genius with legal cunning and law enforcement authority. Their profiles, derived from intercepted communications and forensic analysis, paint a disturbing picture.</p>
+
+            <div class="character-card">
+                <img src="https://via.placeholder.com/90/8e24aa/ffffff?text=ET" alt="Dr. Elias Thorne">
+                <div>
+                    <h4>Dr. Elias Thorne // CODE: PHANTOM // The Neurologist</h4>
+                    <p>A once-respected figure, Thorne's public persona was that of a benevolent medical pioneer. Covert intercepts reveal a deep-seated megalomania, fueled by a rejected neuro-modulator research grant. He viewed humanity as a collection of programmable biological systems, their suffering a mere byproduct of his "grand experiment." His clinic was not just a medical facility, but a data-gathering hub for his nefarious EPM (Evoked Potential Modulator) calibrations.</p>
+                    <div class="interactive-prompt">
+                        <strong>[SIMULATED DATA]:</strong> View intercepted private journal entry fragments of Elias Thorne. <button class="button" onclick="alert('Simulated: Displaying Thorne\'s fragmented journal entries...')">DISPLAY LOGS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="https://via.placeholder.com/90/00bcd4/ffffff?text=KR" alt="Kai Rossi">
+                <div>
+                    <h4>Detective Kai Rossi // CODE: SHADOW // The Corrupted Shield</h4>
+                    <p>A former decorated officer, Rossi's descent into corruption began with a "moment of weakness" – a financial crisis exploited by Thorne. He became the architect of systemic obfuscation within law enforcement, manipulating evidence, misdirecting investigations, and cultivating a culture of willful ignorance. His network ensured that no criminal complaint, however compelling, ever threatened Project Cerberus.</p>
+                    <div class="interactive-prompt">
+                        <strong>[SIMULATED DATA]:</strong> Access redacted internal police communications demonstrating Rossi's influence. <button class="button" onclick="alert('Simulated: Opening redacted police incident reports...')">REVIEW INCIDENTS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="https://via.placeholder.com/90/4CAF50/ffffff?text=AV" alt="Arthur Vance">
+                <div>
+                    <h4>Arthur Vance // CODE: ARBITER // The Legal Architect</h4>
+                    <p>Vance, a corporate litigation shark, reveled in the cutthroat world of legal maneuvering. His moral compass was entirely transactional. He recognized the immense potential for exploitation in Thorne's radical ideas, leveraging his vast legal network to create diversions, bury evidence, and craft airtight defenses. He was the strategist, ensuring Project Cerberus operated within a legally impenetrable fog.</p>
+                    <div class="interactive-prompt">
+                        <strong>[SIMULATED DATA]:</strong> Examine Vance's intricate legal flowchart for corporate "redirection" strategies. <button class="button" onclick="alert('Simulated: Launching interactive legal strategy visualization...')">ANALYZE STRATEGY</button>
+                    </div>
+                </div>
+            </div>
+            <p>Their initial alliance began subtly, each leveraging the others' capabilities in a symbiotic relationship of deceit. It evolved into a sophisticated criminal enterprise, operating with near-impunity due to their carefully constructed veils of legitimacy.</p>
+        </div>
+
+        <!-- Section 2: The Dual-Track Deception -->
+        <div class="section-header">
+            <h2>[DATASTREAM_02]: Dual-Track Deception - The EPM and "Spurious Injections" Protocols</h2>
+            <span class="toggle-icon">+</span>
+        </div>
+        <div class="section-content">
+            <p>Project Cerberus operated on two complementary axes of manipulation: bespoke neuro-control for high-value targets, and mass-scale public debilitation for continuous financial gain. Both protocols were designed for maximum deniability and long-term exploitation.</p>
+
+            <h3>2.1 The Evoked Potential Modulator (EPM): The Silent, Personal Weapon</h3>
+            <p>The EPM represented Elias Thorne's illicit magnum opus. Derived from his ethically questionable research, it was perfected as a tool for remote, non-invasive psychological warfare. Its existence was kept highly classified within the Triad.</p>
+            <ul>
+                <li><strong>Protocol A-7: Neuro-Frequency Calibration:</strong> The EPM operated by emitting extremely precise, ultra-low frequency electromagnetic waves. These waves were modulated to a target's unique brainwave signature, obtained covertly via routine "neurological scans" at Thorne's clinics. This personalized calibration ensured maximum efficacy and minimized detection.</li>
+                <li><strong>Protocol A-8: Remote Deployment & Inducement:</strong> Once calibrated, a compact EPM unit (often disguised as a common electronic device like a router, air purifier, or even embedded within a "smart home" upgrade) would be deployed within proximity of the target. A dedicated operator, under Thorne's direct control, would then remotely adjust its output to induce specific psychological and physiological states: acute anxiety, profound depression, cognitive fog, persistent migraines, or even engineered paranoia.</li>
+                <li><strong>Target Objectives:</strong> The EPM's primary use was to destabilize key individuals, making them appear mentally unstable or incapable, thereby neutralizing threats or facilitating corporate hostile takeovers by discrediting leadership.</li>
+            </ul>
+            <div class="interactive-prompt">
+                <strong>[SIMULATION]:</strong> Observe a real-time (simulated) EPM waveform overlayed onto a typical human brainwave pattern. <button class="button" onclick="alert('Simulated: EPM waveform visualizer activating. Note subtle interference patterns.')">ACTIVATE EPM VISUALIZER</button>
+            </div>
+            <p class="quote">"It's not just surveillance, it's active. Targeted. And it’s affecting your brainwaves. Someone is running a highly sophisticated, bespoke neuro-emissions program on you." - Marcus Chen, Analyst Log [Redacted]</p>
+
+            <h3>2.2 The "Spurious Injection" Scheme: The Mass Debilitation Protocol</h3>
+            <p>This protocol formed the financial backbone of Project Cerberus, generating vast, untraceable revenue streams by creating a widespread, medically dependent populace.</p>
+            <ul>
+                <li><strong>Protocol B-3: Sub-Cellular Degradation Compound:</strong> The "spurious injection" was a seemingly innocuous medical cocktail administered under the guise of "preventative care" or "wellness boosters" in Thorne's network of clinics. It contained a slow-acting compound designed to subtly suppress immune function and disrupt cellular metabolism over extended periods.</li>
+                <li><strong>Protocol B-4: The "Prognosis Doctrine":</strong> The compound did not kill but meticulously degraded the quality of life, inducing chronic fatigue, persistent low-grade infections, diffuse aches, and cognitive fogginess. Thorne's extensive network of compromised or unwitting medical professionals would then "diagnose" these manufactured ailments as natural, progressive conditions, prescribing continuous, expensive "treatment regimens" and booster shots (re-administering the compound).</li>
+                <li><strong>Target Objectives:</strong> To create a massive, financially exploitable patient base. The vagueness of symptoms and the sheer volume of affected individuals ensured deniability. Kai Rossi ensured no public health investigations gained traction, and Arthur Vance handled any minor legal challenges with swift, confidential settlements.</li>
+            </ul>
+            <div class="interactive-prompt">
+                <strong>[SIMULATED DATA]:</strong> Review anonymized patient data graphs showing correlation between "treatment" and symptom progression (statistical analysis). <button class="button" onclick="alert('Simulated: Displaying epidemiological data patterns. Note statistical anomalies.')">VIEW EPIDEMIOLOGICAL DATA</button>
+            </div>
+            <p>The combination of these two protocols allowed Project Cerberus to wield unparalleled influence, exploiting both the individual and the masses, all while maintaining a meticulous facade of medical and legal legitimacy.</p>
+        </div>
+
+        <!-- Section 3: Anya Sharma - The Target -->
+        <div class="section-header">
+            <h2>[DATASTREAM_03]: Anya Sharma - Subject Zero, Catalyst for Exposure</h2>
+            <span class="toggle-icon">+</span>
+        </div>
+        <div class="section-content">
+            <p>Anya Sharma, a brilliant venture capitalist and CEO of 'Nexus Dynamics,' was identified by Project Cerberus as a high-value target for EPM deployment. Her impending AI platform threatened certain Triad interests, and her sharp intellect made her an ideal candidate for psychological neutralization rather than overt elimination.</p>
+
+            <h3>3.1 Initial Deployment & Systemic Gaslighting</h3>
+            <p>The EPM targeting Anya was deployed covertly from an adjacent property, calibrated to induce severe cognitive impairment and psychological distress. Her experience became a harrowing descent into self-doubt and perceived madness:</p>
+            <ul>
+                <li><strong>SYMPTOM ONSET [LOG_1]:</strong> Initial reports: persistent tinnitus, acute fatigue, migratory headaches.</li>
+                <li><strong>PROGRESSION [LOG_2]:</strong> Rapid decline in cognitive function, profound memory lapses, engineered paranoia, severe depressive episodes.</li>
+                <li><strong>ELIAS THORNE'S INTERVENTION:</strong> Posing as her trusted neurologist, Thorne systematically gaslit Anya, attributing all symptoms to a "rapidly progressing neurological disorder" and dismissing her growing suspicions of "extrinsic factors" as further signs of her mental instability.</li>
+                <li><strong>KAI ROSSI'S OBSTRUCTION:</strong> Anya's attempt to file a criminal complaint was swiftly quashed by Rossi, who categorized it as a "wellness check" and "delusional ideation," effectively closing off any official avenue for investigation.</li>
+                <li><strong>ARTHUR VANCE'S MANIPULATION:</strong> Vance, feigning sympathy, skillfully steered Anya towards a fabricated target – OmniCorp – promising a massive lawsuit based on engineered "neuro-silencing technology." This served to distract Anya and provide Project Cerberus with a convenient scapegoat and additional revenue stream.</li>
+            </ul>
+            <div class="interactive-prompt">
+                <strong>[EVIDENCE LOG]:</strong> Cross-reference Anya Sharma's medical records (redacted) with chronological EPM activation logs. <button class="button" onclick="alert('Simulated: Correlating Anya\'s medical deterioration with EPM usage logs...')">SYNC TIMELINE</button>
+            </div>
+            <p class="quote">"They want me to point to a rival. Arthur Vance... pushing me to name a corporate entity... they want me to pursue a massive lawsuit, probably with fabricated evidence, to drain their resources and frame them for my engineered breakdown." - Anya Sharma, Covert Recording [Date/Time Redacted]</p>
+            <p>The Triad believed Anya was broken, that her "delusions" had been successfully channeled into their desired narrative. Their relentless, costly monitoring seemed a small price to pay for securing their elaborate cover. They had underestimated her resilience.</p>
+        </div>
+
+        <!-- Section 4: The Unraveling - Anya's Counter-Offensive -->
+        <div class="section-header">
+            <h2>[DATASTREAM_04]: The Unraveling - Anya's Counter-Offensive & Project Cerberus Compromise</h2>
+            <span class="toggle-icon">+</span>
+        </div>
+        <div class="section-content">
+            <p>Anya Sharma, despite months of systematic psychological warfare, retained a core of critical thinking. The insistent push by Arthur Vance to target OmniCorp, coupled with persistent intuitive dissonance, triggered a final, desperate act of defiance.</p>
+
+            <h3>4.1 Marcus Chen: The Digital Ghost Hunter</h3>
+            <div class="character-card">
+                <img src="https://via.placeholder.com/90/795548/ffffff?text=MC" alt="Marcus Chen">
+                <div>
+                    <h4>Marcus Chen // CODE: GHOST // Chief Security Architect (Former)</h4>
+                    <p>Anya's former colleague, Marcus possessed an unparalleled expertise in cybersecurity and counter-intelligence. Known for his "gray hat" past and deep distrust of monolithic institutions, he was the only individual Anya felt she could trust with her increasingly outlandish claims.</p>
+                </div>
+            </div>
+            <p>Anya initiated contact with Marcus through a series of encrypted, dead-drop communications. Initially skeptical, Marcus's forensic analysis of her digital footprint quickly confirmed the extent of the surveillance. His breakthrough came with the detection of a persistent, localized electromagnetic signature in Anya's apartment—the active EPM.</p>
+            <p class="quote">"You're not crazy. You're being weaponized." - Marcus Chen to Anya Sharma, Encrypted Comms Log [Date/Time Redacted]</p>
+
+            <h3>4.2 The Precision Trap: Project Cerberus's Own Downfall</h3>
+            <p>Recognizing the Triad's pervasive monitoring, Anya and Marcus devised a counter-offensive that leveraged the enemy's own instruments of control against them. The plan: a public, undeniable exposure.</p>
+            <ul>
+                <li><strong>Phase 1: The Lure:</strong> Anya, feigning compliance, arranged a meeting with Arthur Vance and Kai Rossi at her penthouse, claiming to possess "irrefutable evidence" against OmniCorp. This ensured the presence of both key Triad members and activated their full surveillance capabilities.</li>
+                <li><strong>Phase 2: Tactical Deployment:</strong> Marcus, operating from a neighboring building, established secure, encrypted broadcast links. Covert cameras and microphones were activated throughout Anya's penthouse, streaming all proceedings to a pre-selected network of federal prosecutors, investigative journalists, and an immutable, independent data archive.</li>
+                <li><strong>Phase 3: The Unveiling:</strong> During the meeting, Anya dramatically presented her "evidence"—not against OmniCorp, but against the Triad itself. She displayed real-time EPM waveform analysis, demonstrating its active operation.</li>
+                <li><strong>Phase 4: Decryption & Disruption:</strong> At a pre-determined moment, Marcus remotely deactivated the EPM targeting Anya, providing her with instantaneous, overwhelming mental clarity—a shocking moment witnessed by Vance and Rossi. Simultaneously, Anya presented forensic mapping, tracing the EPM's origin directly to Elias Thorne's adjacent facility.</li>
+                <li><strong>Phase 5: Self-Incrimination Broadcast:</strong> The final, devastating blow: Anya played intercepted recordings of Elias, Arthur, and Kai discussing their elaborate schemes, their fears of exposure, and their cynical manipulation of Anya and the wider public. Their own words, captured through their own surveillance, provided irrefutable proof of their crimes.</li>
+            </ul>
+            <div class="interactive-prompt">
+                <strong>[ARCHIVE PLAYBACK]:</strong> Access the raw, unedited footage of Anya Sharma's exposé. Contains graphic content of psychological manipulation. <button class="button" onclick="alert('Simulated: Initiating playback of archived exposé footage. Viewer discretion advised.')">INITIATE PLAYBACK</button>
+            </div>
+            <p>Arthur Vance and Kai Rossi, caught in their own trap, reacted with predictable fury and panicked denial. But it was too late. Anya's pre-emptive data dissemination ensured that if any harm befell her, the full weight of the truth would be immediately unleashed on a global scale. Project Cerberus was compromised beyond recovery.</p>
+        </div>
+
+        <!-- Section 5: Public Outrage & The "Moron's Shield" -->
+        <div class="section-header">
+            <h2>[DATASTREAM_05]: Public Outrage & The "Moron's Shield" - Systemic Complicity</h2>
+            <span class="toggle-icon">+</span>
+        </div>
+        <div class="section-content">
+            <p>The immediate aftermath of Anya Sharma's exposé was a global firestorm. News channels universally broadcasted the shocking revelations, leading to unprecedented public outrage. Warrants were issued for the Triad's arrest, and a full-scale manhunt was initiated. However, their immediate apprehension was hampered by a chilling phenomenon: the <span class="highlight">"Moron's Shield."</span></p>
+
+            <h3>5.1 The Architecture of Complicity</h3>
+            <p>The "Moron's Shield" was not a planned defense; it was the cumulative effect of years of subtle corruption, fear, careerism, and ignorance that Thorne, Rossi, and Vance had meticulously woven into the fabric of society. It comprised individuals who, through various motivations, became unwitting or semi-willing accomplices, providing crucial delays and obfuscation during the critical initial hours of the manhunt.</p>
+
+            <h4>5.1.1 The Medical Machine's Blind Spots (Elias's Network)</h4>
+            <ul>
+                <li><strong>Compromised Staff:</strong> Junior doctors, lab technicians, and nurses, intimidated by Thorne's authority or swayed by illicit "research bonuses," often overlooked anomalies or subtly altered data to match Thorne's fabricated prognoses. During the initial raid, several staff members, fearing implication or genuinely believing Thorne was being unfairly targeted, actively obstructed investigators by misdirecting them or fabricating alibis.</li>
+                <li><strong>The "Prognosis Doctrine" Culture:</strong> Years of indoctrinating patients and medical staff into accepting vague, chronic ailments as "natural" created a system resistant to self-correction. Even after the exposé, many struggling patients initially defended Thorne, believing his treatments were their only hope.</li>
+            </ul>
+
+            <h4>5.1.2 The Shield of the Badge's Systemic Failures (Kai's Network)</h4>
+            <ul>
+                <li><strong>Dismissal Protocols:</strong> Rossi had established internal police protocols that automatically classified "unusual" or "psychologically complex" complaints (like Anya's) as non-criminal, referring them to overwhelmed mental health services. This meant countless reports that could have revealed the EPM's effects were systematically ignored.</li>
+                <li><strong>Data Manipulation Cells:</strong> Covertly, Rossi maintained a small cell of data analysts who "optimized" police databases, reclassifying or sanitizing records that might expose patterns related to Project Cerberus, ensuring no "big picture" could form.</li>
+                <li><strong>Favor-Based Delays:</strong> Personal favors, minor corruption, and the ingrained "brotherhood" within the force meant that initial arrest teams for Rossi were subtly misdirected, buying him precious hours to activate pre-planned escape routes.</li>
+            </ul>
+
+            <h4>5.1.3 The Legal Fog's Obfuscation (Arthur's Network)</h4>
+            <ul>
+                <li><strong>Frivolous Litigation Barrage:</strong> Arthur Vance's network of smaller, affiliated law firms immediately launched a coordinated legal counter-attack: defamation suits against media, injunctions against data dissemination, and challenges to search warrants—a "paper avalanche" designed to overwhelm and delay federal investigators.</li>
+                <li><strong>Asset Redirection:</strong> Through pre-arranged legal loopholes and complicit financial advisers, Vance had established a complex web of offshore accounts and shell corporations, allowing him to rapidly move illicit funds, hindering the asset freeze.</li>
+                <li><strong>Procedural Obstruction:</strong> Vance's emergency legal teams filed a torrent of motions challenging jurisdiction, evidence admissibility, and procedural irregularities, ensuring that for a critical period, the legal system itself became an impenetrable shield.</li>
+            </ul>
+            <div class="interactive-prompt">
+                <strong>[NETWORK VISUALIZATION]:</strong> Display a dynamic, node-based graph illustrating the connections within the "Moron's Shield" and their impact on initial response times. <button class="button" onclick="alert('Simulated: Launching visualization of complicity network. Note density around Triad members.')">VISUALIZE COMPLICITY</button>
+            </div>
+            <p>This network of complicity provided the Triad not with a direct escape, but with critical early delays. It bought them hours, sometimes days, to evade the initial dragnet, proving that systemic corruption, fostered by fear, ambition, and ignorance, can be as effective as any calculated escape plan.</p>
+        </div>
+
+        <!-- Section 6: The Unavoidable Moral & The Lingering Echoes -->
+        <div class="section-header">
+            <h2>[DATASTREAM_06]: The Unavoidable Moral & The Lingering Echoes - A New Paradigm</h2>
+            <span class="toggle-icon">+</span>
+        </div>
+        <div class="section-content">
+            <p>The unmasking of Project Cerberus sent shockwaves far beyond the initial arrests, instigating a global re-evaluation of ethical boundaries, institutional trust, and the very definition of security. The Triad's story stands as a chilling, unavoidable moral for an interconnected world:</p>
+            <ul>
+                <li><strong>The Erosion of Trust:</strong> The deepest betrayal comes not from external enemies, but from those within trusted institutions. The Triad demonstrated how easily oaths of service—to heal, to protect, to legislate—can be perverted for personal gain, leaving indelible scars on public confidence.</li>
+                <li><strong>The Weaponization of Technology & Psychology:</strong> The EPM forced a global reckoning on neurological privacy and the ethical implications of advanced bio-sensing technologies. It highlighted the ease with which sophisticated tools can be turned into instruments of subtle, yet devastating, control and psychological torture.</li>
+                <li><strong>Systemic Vulnerabilities & The "Moron's Shield":</strong> The network of complicity exposed the critical dangers of unquestioning obedience, careerism, and fear within complex systems. It underscored that a few corrupt actors can compromise an entire institution through the subtle manipulation of its well-meaning, but unwary, members.</li>
+                <li><strong>The Power of Disseminated Truth:</strong> Anya Sharma's act of pre-emptive, widespread data dissemination—leveraging the very global connectivity the Triad sought to control—proved to be the ultimate countermeasure. It rendered traditional methods of suppression obsolete, ushering in an era where truth, once released, cannot be contained.</li>
+            </ul>
+
+            <h3>6.1 Post-Exposure Landscape: The Global Reckoning</h3>
+            <p>The "Moron's Shield" only provided temporary sanctuary. The scale of the Triad's crimes, coupled with the relentless pressure from Anya and Marcus's ongoing data releases, ensured an unprecedented global manhunt and a wave of societal reforms:</p>
+            <ul>
+                <li><strong>The Global Manhunt (OPERATION: NEMESIS):</strong> Federal and international agencies launched a coordinated, multi-national effort. Elias Thorne was eventually apprehended in a remote, self-styled "wellness retreat" in South America, still attempting to tinker with crude EPM prototypes. Kai Rossi was located after a tense standoff in a fortified, off-grid compound, his paranoia rendering him dangerous. Arthur Vance, the last to be caught, was found attempting to negotiate a plea bargain in a clandestine meeting, ultimately betrayed by his own, self-serving network.</li>
+                <li><strong>Legislative and Ethical Reforms:</strong> The Project Cerberus case sparked extensive reforms in medical ethics, particularly concerning patient data privacy and neuro-technological oversight. Police oversight bodies were radically restructured, and new whistleblower protections were enacted globally.</li>
+                <li><strong>Anya Sharma's Legacy:</strong> Anya, recovering from the EPM's effects, dedicated her resources and intellect to establishing the "Truth Initiative"—a non-profit dedicated to supporting victims of systemic manipulation and providing resources for secure, independent exposés. Her methods became a new paradigm for fighting powerful, corrupt entities.</li>
+            </ul>
+            <div class="interactive-prompt">
+                <strong>[FINAL REPORT]:</strong> Initiate scrolling summary of legal outcomes and global impact statistics. <button class="button" onclick="alert('Simulated: Displaying scrolling text of final outcomes and reform statistics.')">INITIATE CONCLUSION</button>
+            </div>
+            <p>The story of Project Cerberus serves as a potent, living testament: while the forces of corruption may build formidable walls of deceit, the power of an individual's unwavering pursuit of truth, amplified by a connected and vigilant global community, will always, inevitably, prevail. The systems may fail, but the spirit of inquiry endures.</p>
+        </div>
+
+        <footer>
+            <p>/// END TRANSMISSION /// CLASSIFIED DATASEC PROTOCOL: ACTIVE ///</p>
+            <p>&copy; 2025. This document is part of the Digital Exposé Archive. Unauthorized dissemination outside approved channels will be logged. [Version 3.1.2]</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current timestamp
+            const now = new Date();
+            const timestampElement = document.getElementById('timestamp');
+            if (timestampElement) {
+                timestampElement.textContent = now.getFullYear() + '-' +
+                                                String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                                                String(now.getDate()).padStart(2, '0') + ' ' +
+                                                String(now.getHours()).padStart(2, '0') + ':' +
+                                                String(now.getMinutes()).padStart(2, '0') + ':' +
+                                                String(now.getSeconds()).padStart(2, '0') + ' Z';
+            }
+
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            sectionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling; // The section-content div
+                    const icon = header.querySelector('.toggle-icon'); // The + / - icon
+
+                    // Close all other active sections
+                    document.querySelectorAll('.section-content.active').forEach(openContent => {
+                        if (openContent !== content) { // Don't close the one just clicked
+                            openContent.classList.remove('active');
+                            // Update the icon of the closed section's header
+                            const openContentHeaderIcon = openContent.previousElementSibling.querySelector('.toggle-icon');
+                            if (openContentHeaderIcon) {
+                                openContentHeaderIcon.textContent = '+';
+                            }
+                        }
+                    });
+
+                    // Toggle the clicked section
+                    if (content.classList.contains('active')) {
+                        content.classList.remove('active');
+                        icon.textContent = '+';
+                    } else {
+                        content.classList.add('active');
+                        icon.textContent = '-';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
