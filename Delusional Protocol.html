@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delusion Persistence Protocol: Analyzing Cognitive Rigidity</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c; /* Even darker base */
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a; /* Slightly lighter for panel */
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4; /* Cyan - for logical/external elements */
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c; /* Still a strong red for danger/manipulation */
+            --glow-red: #ff0055; /* Neon Red - for delusion elements */
+            --glow-blue: #00ffff; /* Neon Blue - for reality/intervention elements */
+            --glow-purple: #ff00ff; /* Magenta */
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3); /* Subtle grid */
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px; /* Constrain header width */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red);
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Flowchart left (larger), Cognitive Anomaly Report right */
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px; /* Dashboard overall width */
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative; /* For nested absolute elements */
+        }
+
+        #flowchart-panel {
+            min-height: 750px; /* Fixed height for flowchart area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #cognitive-anomaly-report-panel {
+            min-height: 750px; /* Match flowchart height */
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #cognitive-anomaly-report-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #cognitive-anomaly-report-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto; /* Allow scrolling for long descriptions */
+            flex-grow: 1; /* Take up available space */
+            padding-right: 5px; /* For scrollbar not to cover text */
+        }
+        #cognitive-anomaly-report-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #cognitive-anomaly-report-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #cognitive-anomaly-report-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #cognitive-anomaly-report-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg path,
+        .flow-box.highlight .box-icon svg circle,
+        .flow-box.highlight .box-icon svg rect,
+        .flow-box.highlight .box-icon svg polygon,
+        .flow-box.highlight .box-icon svg line {
+            fill: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .stroke-element {
+            stroke: var(--glow-red);
+        }
+        /* Special cases for some elements */
+        .flow-box.highlight .box-icon svg .reality-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        .flow-box.highlight .box-icon svg .neutral-element {
+            fill: var(--text-light);
+            stroke: var(--text-light);
+        }
+        
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. Initial Misperception / Seed of Delusion: Glitching eye/brain */
+        @keyframes eyeGlitched {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+        @keyframes pupilTwitch {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+        }
+        .flow-box.highlight #glitching-eye { animation: eyeGlitched 1.5s ease-in-out infinite alternate; }
+        .flow-box.highlight #glitching-pupil { animation: pupilTwitch 0.5s linear infinite; }
+
+        /* 2. Confirmation Bias / Selective Filtering: Data filtering through a funnel */
+        @keyframes filterPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes dataFlow {
+            0% { transform: translateY(-30px); opacity: 0; }
+            50% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(30px); opacity: 0; }
+        }
+        .flow-box.highlight #filter-funnel { animation: filterPulse 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #filtered-data-good { animation: dataFlow 1.5s ease-in-out infinite; }
+        .flow-box.highlight #filtered-data-bad { animation: dataFlow 1.5s 0.7s ease-in-out infinite; }
+        #filtered-data-good, #filtered-data-bad { opacity: 0; }
+
+        /* 3. Narrative Construction / Delusion Formation: Jumbled pieces forming rigid structure */
+        @keyframes pieceAssemble {
+            0% { transform: translate(10px, -10px) rotate(10deg); opacity: 0; }
+            100% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+        }
+        @keyframes structurePulse {
+            0%, 100% { stroke-width: 2px; }
+            50% { stroke-width: 3px; }
+        }
+        .flow-box.highlight #delusion-piece-1 { animation: pieceAssemble 0.8s ease-out forwards; }
+        .flow-box.highlight #delusion-piece-2 { animation: pieceAssemble 0.8s 0.2s ease-out forwards; }
+        .flow-box.highlight #delusion-piece-3 { animation: pieceAssemble 0.8s 0.4s ease-out forwards; }
+        .flow-box.highlight #delusion-structure { animation: structurePulse 1.5s ease-in-out infinite alternate 0.8s; }
+        #delusion-piece-1, #delusion-piece-2, #delusion-piece-3 { opacity: 0; }
+
+        /* 4. Emotional Investment / Belief Consolidation: Pulsing brain with red aura */
+        @keyframes brainPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes auraGlow {
+            0%, 100% { filter: drop-shadow(0 0 5px var(--glow-red)); }
+            50% { filter: drop-shadow(0 0 10px var(--glow-red)); }
+        }
+        .flow-box.highlight #delusion-brain { animation: brainPulse 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #delusion-aura { animation: auraGlow 2s ease-in-out infinite alternate; }
+
+        /* 5. Reality Distortion / Cognitive Dissonance: Blue data hitting red shield and dissipating */
+        @keyframes dataBounce {
+            0% { transform: translate(0,0); opacity: 1; }
+            50% { transform: translate(-10px, -5px); opacity: 0.5; }
+            100% { transform: translate(-20px, -10px); opacity: 0; }
+        }
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .flow-box.highlight #reality-data-1 { animation: dataBounce 1.5s ease-out infinite; }
+        .flow-box.highlight #reality-data-2 { animation: dataBounce 1.5s 0.5s ease-out infinite; }
+        .flow-box.highlight #delusion-shield { animation: shieldPulse 1.5s ease-in-out infinite alternate; }
+        #reality-data-1, #reality-data-2 { opacity: 0; }
+
+        /* 6. Behavioral Manifestation / Delusion-Driven Actions: Figure on a rigid path */
+        @keyframes pathGlow {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 100; }
+        }
+        @keyframes figureWalk {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(2px); }
+        }
+        .flow-box.highlight #rigid-path {
+            stroke-dasharray: 10 5;
+            animation: pathGlow 1s linear infinite;
+        }
+        .flow-box.highlight #delusion-figure { animation: figureWalk 1s ease-in-out infinite alternate; }
+
+        /* 7. Social Isolation / External Conflict: Figures separated by red barrier */
+        @keyframes barrierPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        @keyframes figureWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(3deg); }
+        }
+        .flow-box.highlight #isolation-barrier { animation: barrierPulse 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #isolated-figure-left, .flow-box.highlight #isolated-figure-right { animation: figureWiggle 1s ease-in-out infinite alternate; }
+
+        /* 8. Reinforcement Loop / Impenetrable Logic: Continuous self-sustaining loop */
+        @keyframes loopFlow {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 200; }
+        }
+        .flow-box.highlight #logic-loop {
+            stroke-dasharray: 20 10;
+            animation: loopFlow 3s linear infinite;
+        }
+
+        /* 9. Outcome / Delusion Persistence vs. Break: Solid block vs. crack */
+        @keyframes blockPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        @keyframes crackShimmer {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        .flow-box.highlight #delusion-block { animation: blockPulse 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #delusion-crack { animation: crackShimmer 3s ease-in-out infinite; }
+        #delusion-crack { opacity: 0; }
+
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center controls */
+            gap: 20px;
+            margin-top: 0; /* Already margin on dashboard-main */
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>DELUSION PERSISTENCE PROTOCOL: COGNITIVE RIGIDITY ANALYSIS</h1>
+        <p class="subtitle">MAPPING THE FORMATION AND MAINTENANCE OF FIXED THINKING PATTERNS</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="35" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="glitching-eye" d="M50 25 C70 25, 80 40, 80 50 C80 60, 70 75, 50 75 C30 75, 20 60, 20 50 C20 40, 30 25, 50 25 Z" fill="var(--text-medium)"/>
+                            <circle id="glitching-pupil" cx="50" cy="50" r="8"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INITIAL MISPERCEPTION / SEED OF DELUSION</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="filter-funnel" d="M25 20 L75 20 L65 80 L35 80 Z" fill="#2a2a4a" class="stroke-element"/>
+                            <rect id="filtered-data-good" x="45" y="10" width="10" height="10" fill="var(--glow-red)" opacity="0"/>
+                            <rect id="filtered-data-bad" x="45" y="10" width="10" height="10" fill="var(--glow-blue)" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">CONFIRMATION BIAS / SELECTIVE FILTERING</div>
+                    <div class="small-text">[DATA BIASING]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <g id="delusion-structure" class="stroke-element" stroke-width="2">
+                                <rect x="30" y="30" width="40" height="40" fill="#2a2a4a" />
+                                <line x1="30" y1="30" x2="70" y2="70" />
+                                <line x1="70" y1="30" x2="30" y2="70" />
+                            </g>
+                            <rect id="delusion-piece-1" x="20" y="20" width="10" height="10" fill="var(--text-medium)" opacity="0"/>
+                            <rect id="delusion-piece-2" x="70" y="20" width="10" height="10" fill="var(--text-medium)" opacity="0"/>
+                            <rect id="delusion-piece-3" x="45" y="75" width="10" height="10" fill="var(--text-medium)" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">NARRATIVE CONSTRUCTION / DELUSION FORMATION</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="delusion-brain" cx="50" cy="50" r="30" fill="#2a2a4a"/>
+                            <path id="delusion-aura" d="M50 20 A30 30 0 0 1 50 80 A30 30 0 0 1 50 20 M35 40 Q45 35 50 40 Q55 35 65 40 M40 60 Q50 65 60 60" fill="none" class="stroke-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">EMOTIONAL INVESTMENT / BELIEF CONSOLIDATION</div>
+                    <div class="small-text">[SELF-VALIDATION LOOP]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a"/>
+                            <rect id="delusion-shield" x="30" y="30" width="40" height="40" fill="var(--glow-red)" class="stroke-element"/>
+                            <rect id="reality-data-1" x="5" y="45" width="15" height="10" fill="var(--glow-blue)" opacity="0"/>
+                            <rect id="reality-data-2" x="5" y="30" width="15" height="10" fill="var(--glow-blue)" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">REALITY DISTORTION / COGNITIVE DISSONANCE</div>
+                    <div class="small-text">[INFORMATION REJECTION]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="rigid-path" d="M20 70 H80" class="stroke-element" stroke-width="3"/>
+                            <path d="M20 70 L25 65 L25 75 Z M80 70 L75 65 L75 75 Z" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="delusion-figure" d="M50 40 C40 40, 35 30, 50 30 C65 30, 60 40, 50 40 Z M50 50 L40 60 L60 60 L50 50 Z" fill="#2a2a4a"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">BEHAVIORAL MANIFESTATION / DELUSION-DRIVEN ACTIONS</div>
+                    <div class="small-text">[PREDICTIVE BEHAVIOR]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" class="stroke-element"/>
+                            <path id="isolated-figure-left" d="M35 55 C30 55, 28 50, 35 50 C42 50, 40 55, 35 55 Z M35 65 L30 70 L40 70 Z" fill="var(--text-medium)"/>
+                            <path id="isolated-figure-right" d="M65 55 C60 55, 58 50, 65 50 C72 50, 70 55, 65 55 Z M65 65 L60 70 L70 70 Z" fill="var(--glow-blue)"/>
+                            <line id="isolation-barrier" x1="50" y1="25" x2="50" y2="75" class="stroke-element" stroke="var(--glow-red)" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">SOCIAL ISOLATION / EXTERNAL CONFLICT</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="logic-loop" d="M20 50 A30 30 0 1 1 80 50 A30 30 0 1 1 20 50 M40 50 A10 10 0 1 0 60 50 A10 10 0 1 0 40 50" class="stroke-element" stroke-width="3"/>
+                            <circle cx="50" cy="50" r="5" fill="var(--glow-red)"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">REINFORCEMENT LOOP / IMPENETRABLE LOGIC</div>
+                    <div class="small-text">[AUTONOMOUS REPLICATION]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="delusion-block" x="20" y="20" width="60" height="60" fill="#2a2a4a" class="stroke-element"/>
+                            <line id="delusion-crack" x1="40" y1="30" x2="60" y2="70" class="stroke-element" stroke="var(--glow-blue)" stroke-width="2" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">OUTCOME / DELUSION PERSISTENCE VS. BREAK</div>
+                </div
+            </div>
+        </div>
+
+        <div id="cognitive-anomaly-report-panel" class="dashboard-panel">
+            <h2>COGNITIVE ANOMALY REPORT</h2>
+            <div id="cognitive-anomaly-report-text">
+                <p>Welcome to the Delusion Persistence Protocol Dashboard. This system analyzes the formation, maintenance, and potential outcomes of fixed thinking patterns.</p>
+                <p>Use the navigation controls below to observe each stage, from initial misperception to the ultimate persistence or break of the delusion.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: INITIAL MISPERCEPTION / SEED OF DELUSION</h2><p><strong>ANALYSIS:</strong> The origin point where a sensory experience, thought, or external event is misinterpreted, leading to a faulty initial conclusion. This is the vulnerable moment where the "seed" of the fixed idea is planted.</p><p><strong>OBSERVATIONS:</strong> A specific trigger event, an ambiguous situation, or a highly emotional moment that distorts initial cognitive processing. Early signs of irrational interpretation.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: CONFIRMATION BIAS / SELECTIVE FILTERING</h2><p><strong>ANALYSIS:</strong> The individual actively (though often unconsciously) seeks out, interprets, and remembers information that supports their initial misperception, while systematically ignoring or downplaying contradictory evidence.</p><p><strong>OBSERVATIONS:</strong> Focusing only on specific details, interpreting coincidences as evidence, dismissing credible counter-arguments, an inability to objectively weigh pros and cons.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: NARRATIVE CONSTRUCTION / DELUSION FORMATION</h2><p><strong>ANALYSIS:</strong> The isolated pieces of "confirming" evidence are woven into a coherent, albeit false, narrative. This creates a "story" that explains the fixed idea and integrates it into the individual\'s understanding of the world.</p><p><strong>OBSERVATIONS:</strong> Elaborate explanations for events, connecting unrelated occurrences, developing a detailed "theory" that explains their unique interpretation of reality.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: EMOTIONAL INVESTMENT / BELIEF CONSOLIDATION</h2><p><strong>ANALYSIS:</strong> The fixed idea becomes deeply intertwined with the individual\'s emotional state, identity, or sense of security. Challenging the belief feels like a direct attack on their core self, making it highly resistant to change.</p><p><strong>OBSERVATIONS:</strong> Strong emotional reactions to questioning, defensive posturing, the belief provides comfort or a sense of specialness, intertwining with self-worth.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: REALITY DISTORTION / COGNITIVE DISSONANCE</h2><p><strong>ANALYSIS:</strong> When faced with undeniable facts that contradict the fixed belief, the individual actively distorts or reinterprets reality to eliminate the discomfort of cognitive dissonance. This can involve elaborate rationalizations or outright denial.</p><p><strong>OBSERVATIONS:</strong> Accusing others of lying/misunderstanding, inventing complex reasons why evidence is flawed, selective memory, an inability to reconcile conflicting data.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: BEHAVIORAL MANIFESTATION / DELUSION-DRIVEN ACTIONS</h2><p><strong>ANALYSIS:</strong> The fixed belief begins to directly influence actions and decisions. The individual\'s behavior becomes consistent with their deluded reality, potentially leading to maladaptive or self-sabotaging outcomes.</p><p><strong>OBSERVATIONS:</strong> Making significant life changes based on the delusion, withdrawing from certain activities, engaging in ritualistic behaviors, alienating others through actions.</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: SOCIAL ISOLATION / EXTERNAL CONFLICT</h2><p><strong>ANALYSIS:</strong> As the delusion solidifies and influences behavior, it creates a chasm between the individual and external reality. Relationships suffer, and attempts by others to intervene are met with hostility or further withdrawal.</p><p><strong>OBSERVATIONS:</strong> Loss of friends/family connections, arguments stemming from differing realities, inability to compromise, feeling misunderstood or persecuted by others.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: REINFORCEMENT LOOP / IMPENETRABLE LOGIC</h2><p><strong>ANALYSIS:</strong> The delusion becomes a self-sustaining system. The distorted worldview prevents new, contradictory information from entering, and existing "evidence" constantly reinforces the fixed belief. It\'s a closed, self-referential logical system.</p><p><strong>OBSERVATIONS:</strong> No external input can penetrate, every event is interpreted through the lens of the delusion, the individual\'s worldview becomes increasingly rigid and unassailable.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: OUTCOME / DELUSION PERSISTENCE VS. BREAK</h2><p><strong>ANALYSIS:</strong> The long-term state. Without significant therapeutic intervention or a profound, undeniable reality check, the delusion typically persists. In rare cases, a "break" can occur, forcing a re-evaluation of the fixed belief, though this is often traumatic.</p><p><strong>OBSERVATIONS:</strong> Continued adherence to the delusion, potential worsening of symptoms, or in cases of a break, extreme distress followed by a gradual re-integration of reality.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const cognitiveAnomalyReportText = document.getElementById('cognitive-anomaly-report-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = '';
+                el.style.filter = '';
+                el.style.transform = '';
+            });
+
+            // Specific opacity/visibility resets for elements that are hidden by default or fade in
+            // Box 1
+            // Box 2
+            document.getElementById('filtered-data-good').style.opacity = 0;
+            document.getElementById('filtered-data-bad').style.opacity = 0;
+            // Box 3
+            document.getElementById('delusion-piece-1').style.opacity = 0;
+            document.getElementById('delusion-piece-2').style.opacity = 0;
+            document.getElementById('delusion-piece-3').style.opacity = 0;
+            // Box 4
+            // Box 5
+            document.getElementById('reality-data-1').style.opacity = 0;
+            document.getElementById('reality-data-2').style.opacity = 0;
+            // Box 6
+            // Box 7
+            // Box 8
+            // Box 9
+            document.getElementById('delusion-crack').style.opacity = 0;
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                cognitiveAnomalyReportText.innerHTML = '<p>Welcome to the Delusion Persistence Protocol Dashboard. This system analyzes the formation, maintenance, and potential outcomes of fixed thinking patterns.</p><p>Use the navigation controls below to observe each stage, from initial misperception to the ultimate persistence or break of the delusion.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                cognitiveAnomalyReportText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-2':
+                        document.getElementById('filtered-data-good').style.opacity = 1;
+                        document.getElementById('filtered-data-bad').style.opacity = 1;
+                        break;
+                    case 'box-3':
+                        document.getElementById('delusion-piece-1').style.opacity = 1;
+                        document.getElementById('delusion-piece-2').style.opacity = 1;
+                        document.getElementById('delusion-piece-3').style.opacity = 1;
+                        break;
+                    case 'box-4':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-5':
+                        document.getElementById('reality-data-1').style.opacity = 1;
+                        document.getElementById('reality-data-2').style.opacity = 1;
+                        break;
+                    case 'box-6':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-7':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-8':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-9':
+                        document.getElementById('delusion-crack').style.opacity = 1; // Makes it visible for animation
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
