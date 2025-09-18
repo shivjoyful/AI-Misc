@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mass Mania Contagion Protocol: Collective Irrationality Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-dark: #10101c;
+            --bg-medium: #1c1c2f;
+            --panel-bg: #22223a;
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0c0;
+            --accent-blue: #00bcd4;
+            --accent-green: #2ecc71;
+            --highlight-red: #e74c3c;
+            --glow-red: #ff0055; /* Mania, irrationality, destructive energy */
+            --glow-blue: #00ffff; /* Initial crowd state, external elements, affected individuals */
+            --glow-purple: #ff00ff;
+            --border-color: #3f3f5a;
+            --box-bg-normal: #333355;
+            --box-bg-highlight: #444466;
+            --grid-line-color: rgba(63, 63, 90, 0.3);
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .dashboard-header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-red);
+            text-shadow: 0 0 10px var(--glow-red), 0 0 20px var(--glow-red);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            font-size: 2.5em;
+        }
+        p.subtitle {
+            font-size: 0.9em;
+            color: var(--text-medium);
+            margin-bottom: 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.1);
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #flowchart-panel {
+            min-height: 750px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #crowd-dynamics-log-panel {
+            min-height: 750px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+        #crowd-dynamics-log-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        #crowd-dynamics-log-text {
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+        #crowd-dynamics-log-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        #crowd-dynamics-log-text::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 10px;
+        }
+        #crowd-dynamics-log-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        #crowd-dynamics-log-text::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        #flowchart-container {
+            position: relative;
+            width: 880px;
+            height: 710px;
+            display: block;
+        }
+        .flow-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-light);
+            box-sizing: border-box;
+            transition: all 0.4s ease-in-out, box-shadow 0.6s ease-in-out;
+            border: 2px solid var(--border-color);
+            background-color: var(--box-bg-normal);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            transform-style: preserve-3d;
+        }
+        .flow-box.highlight {
+            border-color: var(--glow-red);
+            box-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 85, 0.4);
+            transform: scale(1.05) rotateY(5deg);
+            z-index: 10;
+            background-color: var(--box-bg-highlight);
+        }
+
+        /* Positioning - unchanged, relative to #flowchart-container */
+        #box-1 { top: 10px; left: 10px; }
+        #box-2 { top: 10px; left: 310px; }
+        #box-3 { top: 10px; left: 610px; }
+
+        #box-4 { top: 240px; left: 10px; }
+        #box-5 { top: 240px; left: 310px; }
+        #box-6 { top: 240px; left: 610px; }
+
+        #box-7 { top: 470px; left: 10px; }
+        #box-8 { top: 470px; left: 310px; }
+        #box-9 { top: 470px; left: 610px; }
+
+        /* SVG Arrows */
+        svg.arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .flow-arrow {
+            stroke: var(--text-medium);
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.4s ease-in-out, stroke-width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 0.5;
+        }
+        .flow-arrow.highlight {
+            stroke: var(--glow-red);
+            stroke-width: 4;
+            opacity: 1;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px var(--glow-red));
+        }
+        #arrowhead polygon { fill: var(--text-medium); transition: fill 0.4s ease-in-out; }
+
+        /* Icons inside boxes */
+        .box-icon {
+            margin-bottom: 5px;
+            height: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .box-icon svg {
+            height: 100%;
+            width: auto;
+            max-width: 80%;
+        }
+        .box-icon svg path, .box-icon svg circle, .box-icon svg rect, .box-icon svg polygon, .box-icon svg line {
+            fill: var(--text-medium);
+            stroke: none;
+            transition: fill 0.4s ease-in-out, stroke 0.4s ease-in-out;
+            transform-origin: center center;
+            vector-effect: non-scaling-stroke;
+        }
+        .box-icon svg .stroke-element {
+            stroke: var(--text-medium);
+            stroke-width: 2px;
+            fill: none;
+            transition: stroke 0.4s ease-in-out;
+        }
+        
+        .box-text, .small-text {
+            font-weight: bold;
+            margin-top: 5px;
+            transition: color 0.4s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .small-text {
+            font-size: 0.8em;
+            color: var(--text-medium);
+            font-weight: normal;
+        }
+
+        /* Highlight styles for contents of the highlighted box */
+        .flow-box.highlight .box-icon svg .mania-element {
+            fill: var(--glow-red);
+            stroke: var(--glow-red);
+        }
+        .flow-box.highlight .box-icon svg .crowd-element {
+            fill: var(--glow-blue);
+            stroke: var(--glow-blue);
+        }
+        .flow-box.highlight .box-icon svg path:not([class]),
+        .flow-box.highlight .box-icon svg circle:not([class]),
+        .flow-box.highlight .box-icon svg rect:not([class]),
+        .flow-box.highlight .box-icon svg polygon:not([class]),
+        .flow-box.highlight .box-icon svg line:not([class]),
+        .flow-box.highlight .box-icon svg .stroke-element:not([class]) {
+            fill: var(--text-light); /* Default elements become lighter */
+            stroke: var(--text-light);
+        }
+        
+        .flow-box.highlight .box-text {
+            color: var(--glow-red);
+            text-shadow: 0 0 5px var(--glow-red);
+        }
+        .flow-box.highlight .small-text {
+            color: var(--highlight-red);
+        }
+
+        /* ANIMATIONS */
+        .box-icon svg * { animation: none !important; } /* Reset all animations */
+
+        /* 1. INITIAL ANOMALY / INDIVIDUAL SEED: Erratic glowing point */
+        @keyframes erraticGlow {
+            0%, 100% { transform: translate(0,0); opacity: 1; filter: drop-shadow(0 0 5px var(--glow-red)); }
+            25% { transform: translate(5px, -5px); opacity: 0.8; filter: drop-shadow(0 0 8px var(--glow-red)); }
+            50% { transform: translate(-5px, 5px); opacity: 1; filter: drop-shadow(0 0 10px var(--glow-red)); }
+            75% { transform: translate(5px, 5px); opacity: 0.8; filter: drop-shadow(0 0 8px var(--glow-red)); }
+        }
+        .flow-box.highlight #erratic-point { animation: erraticGlow 2s ease-in-out infinite alternate; }
+
+        /* 2. AMBIGUITY & ANXIETY / CONTEXTUAL VULNERABILITY: Trembling figures, flashing question marks */
+        @keyframes figureTremble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-1px) translateX(1px); }
+        }
+        @keyframes qMarkFlash {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        .flow-box.highlight #vulnerable-figure-1, .flow-box.highlight #vulnerable-figure-2 { animation: figureTremble 0.8s ease-in-out infinite alternate; }
+        .flow-box.highlight #anxiety-q-mark { animation: qMarkFlash 1.5s steps(1) infinite; }
+        /* #anxiety-q-mark initially hidden by JS */
+
+        /* 3. PERCEIVED THREAT / SHARED MISINTERPRETATION: Pulsating central warning symbol */
+        @keyframes threatPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--glow-red)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--glow-red)); }
+        }
+        .flow-box.highlight #threat-symbol { animation: threatPulse 1.5s ease-in-out infinite alternate; }
+
+        /* 4. SOCIAL CONTAGION / EMOTIONAL SPREAD: Arrows spreading between figures */
+        @keyframes arrowSpread {
+            0% { stroke-dasharray: 0 100; opacity: 0; }
+            100% { stroke-dasharray: 100 0; opacity: 1; }
+        }
+        @keyframes figureReact {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .flow-box.highlight #contagion-arrow-1 { animation: arrowSpread 1s ease-out forwards; }
+        .flow-box.highlight #contagion-arrow-2 { animation: arrowSpread 1s 0.3s ease-out forwards; }
+        .flow-box.highlight #contagion-figure-b, .flow-box.highlight #contagion-figure-c { animation: figureReact 1s 0.5s ease-in-out forwards; }
+        /* #contagion-arrow-1, #contagion-arrow-2 initially hidden by JS */
+
+        /* 5. ECHO CHAMBER FORMATION / GROUP REINFORCEMENT: Figures facing inward, sound waves distorting */
+        @keyframes waveDistort {
+            0%, 100% { d: path("M20 50 Q30 40 40 50 Q50 60 60 50 Q70 40 80 50"); }
+            50% { d: path("M20 50 Q30 60 40 50 Q50 40 60 50 Q70 60 80 50"); }
+        }
+        @keyframes figureGlow {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--glow-red)); }
+            50% { filter: drop-shadow(0 0 5px var(--glow-red)); }
+        }
+        .flow-box.highlight #echo-wave { animation: waveDistort 2s ease-in-out infinite alternate; }
+        .flow-box.highlight #echo-figure-a, .flow-box.highlight #echo-figure-b, .flow-box.highlight #echo-figure-c { animation: figureGlow 2s ease-in-out infinite alternate; }
+
+        /* 6. IRRATIONAL ACT / COLLECTIVE CHAOS: Fragments exploding outward */
+        @keyframes fragmentExplode {
+            0% { transform: translate(0,0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x-offset), var(--y-offset)) rotate(var(--rot-deg)) scale(0.5); opacity: 0; }
+        }
+        .flow-box.highlight #chaos-fragment-1 { animation: fragmentExplode 1s ease-out forwards; --x-offset: -20px; --y-offset: -20px; --rot-deg: -30deg; }
+        .flow-box.highlight #chaos-fragment-2 { animation: fragmentExplode 1s 0.2s ease-out forwards; --x-offset: 20px; --y-offset: -20px; --rot-deg: 30deg; }
+        .flow-box.highlight #chaos-fragment-3 { animation: fragmentExplode 1s 0.4s ease-out forwards; --x-offset: -10px; --y-offset: 20px; --rot-deg: 10deg; }
+        .flow-box.highlight #chaos-fragment-4 { animation: fragmentExplode 1s 0.6s ease-out forwards; --x-offset: 10px; --y-offset: 20px; --rot-deg: -10deg; }
+        .flow-box.highlight #chaos-center { animation: threatPulse 1s ease-in-out infinite alternate; }
+        /* #chaos-fragment-1 to 4 initially visible, then animate away */
+
+        /* 7. PERSONAL DEINDIVIDUATION / LOST ACCOUNTABILITY: Figure blurring/dissolving */
+        @keyframes figureDissolve {
+            0%, 100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+            50% { opacity: 0.5; transform: translateY(-5px); filter: blur(2px); }
+            75% { opacity: 0; transform: translateY(-10px); filter: blur(5px); }
+        }
+        .flow-box.highlight #dissolving-figure { animation: figureDissolve 2s ease-in-out infinite; }
+
+        /* 8. ESCALATION & FEEDBACK LOOP / UNCONTROLLED HYSTERIA: Loop with fast-moving arrow */
+        @keyframes loopPathFlow { /* Animation for the path's dash effect */
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 200; }
+        }
+        @keyframes arrowAlongPath { /* Animation for the arrow moving along the path */
+            0% { offset-distance: 0%; }
+            100% { offset-distance: 100%; }
+        }
+        .flow-box.highlight #hysteria-loop-path {
+            stroke-dasharray: 10 5;
+            animation: loopPathFlow 1s linear infinite;
+        }
+        .flow-box.highlight #hysteria-loop-arrow {
+            animation: arrowAlongPath 1s linear infinite; /* Apply new animation */
+        }
+
+        /* 9. AFTERMATH / DISSIPATION OR LASTING IMPRINT: Scattered remnants, fading glow */
+        @keyframes remnantSettle {
+            0% { transform: translateY(-10px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 0.5; }
+        }
+        @keyframes glowFade {
+            0%, 100% { filter: drop-shadow(0 0 5px var(--glow-red)); opacity: 1; }
+            50% { filter: drop-shadow(0 0 2px var(--glow-red)); opacity: 0.5; }
+        }
+        /* #aftermath-remnant-1, #aftermath-remnant-2, #aftermath-fading-glow initially hidden by JS */
+
+
+        /* Controls */
+        .dashboard-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 0;
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--glow-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-medium);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #currentStepText {
+            color: var(--text-light);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>MASS MANIA CONTAGION PROTOCOL: COLLECTIVE IRRATIONALITY ANALYSIS</h1>
+        <p class="subtitle">MAPPING THE SPREAD, ESCALATION, AND IMPACT OF GROUP HYSTERIA</p>
+    </div>
+
+    <div class="dashboard-main">
+        <div id="flowchart-panel" class="dashboard-panel">
+            <div id="flowchart-container">
+                <!-- SVG for arrows -->
+                <svg class="arrows" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrowhead-polygon" style="fill:var(--text-medium);" />
+                        </marker>
+                    </defs>
+                    <!-- Top row horizontal arrows -->
+                    <line id="arrow-1-2" class="flow-arrow" x1="270" y1="85" x2="310" y2="85" />
+                    <line id="arrow-2-3" class="flow-arrow" x1="570" y1="85" x2="610" y2="85" />
+                    
+                    <!-- Mid row horizontal arrows -->
+                    <line id="arrow-4-5" class="flow-arrow" x1="270" y1="315" x2="310" y2="315" />
+                    <line id="arrow-5-6" class="flow-arrow" x1="570" y1="315" x2="610" y2="315" />
+
+                    <!-- Bottom row horizontal arrows -->
+                    <line id="arrow-7-8" class="flow-arrow" x1="270" y1="545" x2="310" y2="545" />
+                    <line id="arrow-8-9" class="flow-arrow" x1="570" y1="545" x2="610" y2="545" />
+
+                    <!-- Vertical arrows (connecting main column flow) -->
+                    <line id="arrow-3-6" class="flow-arrow" x1="735" y1="160" x2="735" y2="240" />
+                    <line id="arrow-6-9" class="flow-arrow" x1="735" y1="390" x2="735" y2="470" />
+                </svg>
+
+                <!-- Flowchart Boxes -->
+                <div id="box-1" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="25" y="25" width="50" height="50" fill="#2a2a4a" class="stroke-element crowd-element"/>
+                            <circle id="erratic-point" cx="50" cy="50" r="8" fill="var(--glow-red)" class="mania-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">INITIAL ANOMALY / INDIVIDUAL SEED</div>
+                </div>
+
+                <div id="box-2" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="vulnerable-figure-1" d="M30 65 Q50 80 70 65 Q50 50 30 65 Z M50 40 C40 40, 35 30, 50 30 C65 30, 60 40, 50 40 Z" fill="var(--text-medium)" class="crowd-element"/>
+                            <path id="vulnerable-figure-2" d="M30 25 Q50 40 70 25 Q50 10 30 25 Z M50 0 C40 0, 35 -10, 50 -10 C65 -10, 60 0, 50 0 Z" fill="var(--text-medium)" class="crowd-element"/>
+                            <text id="anxiety-q-mark" x="50" y="55" font-size="20" text-anchor="middle" fill="var(--glow-blue)" opacity="0">?</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">AMBIGUITY & ANXIETY / CONTEXTUAL VULNERABILITY</div>
+                    <div class="small-text">[SUSCEPTIBLE GROUP]</div>
+                </div>
+
+                <div id="box-3" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2a2a4a" class="stroke-element crowd-element"/>
+                            <text id="threat-symbol" x="50" y="60" font-size="60" text-anchor="middle" fill="var(--glow-red)" class="mania-element">!</text>
+                        </svg>
+                    </div>
+                    <div class="box-text">PERCEIVED THREAT / SHARED MISINTERPRETATION</div>
+                </div>
+
+                <div id="box-4" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="contagion-figure-a" cx="30" cy="50" r="15" fill="#2a2a4a" class="crowd-element"/>
+                            <circle id="contagion-figure-b" cx="70" cy="30" r="15" fill="#2a2a4a" class="crowd-element"/>
+                            <circle id="contagion-figure-c" cx="70" cy="70" r="15" fill="#2a2a4a" class="crowd-element"/>
+                            <line id="contagion-arrow-1" x1="45" y1="50" x2="55" y2="50" marker-end="url(#arrowhead)" class="stroke-element mania-element" stroke-width="2" opacity="0"/>
+                            <line id="contagion-arrow-2" x1="55" y1="50" x2="65" y2="40" marker-end="url(#arrowhead)" class="stroke-element mania-element" stroke-width="2" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">SOCIAL CONTAGION / EMOTIONAL SPREAD</div>
+                    <div class="small-text">[MIMICRY & AMPLIFICATION]</div>
+                </div>
+
+                <div id="box-5" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="echo-figure-a" cx="50" cy="30" r="15" fill="#2a2a4a" class="crowd-element"/>
+                            <circle id="echo-figure-b" cx="30" cy="70" r="15" fill="#2a2a4a" class="crowd-element"/>
+                            <circle id="echo-figure-c" cx="70" cy="70" r="15" fill="#2a2a4a" class="crowd-element"/>
+                            <path id="echo-wave" d="M20 50 Q30 40 40 50 Q50 60 60 50 Q70 40 80 50" class="stroke-element mania-element" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">ECHO CHAMBER FORMATION / GROUP REINFORCEMENT</div>
+                    <div class="small-text">[REALITY DISTORTION]</div>
+                </div>
+
+                <div id="box-6" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle id="chaos-center" cx="50" cy="50" r="20" fill="var(--glow-red)" class="mania-element"/>
+                            <rect id="chaos-fragment-1" x="40" y="40" width="10" height="10" fill="var(--glow-red)" class="mania-element"/>
+                            <rect id="chaos-fragment-2" x="50" y="40" width="10" height="10" fill="var(--glow-red)" class="mania-element"/>
+                            <rect id="chaos-fragment-3" x="40" y="50" width="10" height="10" fill="var(--glow-red)" class="mania-element"/>
+                            <rect id="chaos-fragment-4" x="50" y="50" width="10" height="10" fill="var(--glow-red)" class="mania-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">IRRATIONAL ACT / COLLECTIVE CHAOS</div>
+                    <div class="small-text">[MOB BEHAVIOR]</div>
+                </div>
+
+                <div id="box-7" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M50 30 C40 30, 35 20, 50 20 C65 20, 60 30, 50 30 Z M50 40 L40 50 L60 50 Z M45 60 L55 60 M50 50 L50 60" fill="#2a2a4a" class="crowd-element"/>
+                            <path id="dissolving-figure" d="M50 30 C40 30, 35 20, 50 20 C65 20, 60 30, 50 30 Z M50 40 L40 50 L60 50 Z M45 60 L55 60 M50 50 L50 60" fill="var(--glow-red)" class="mania-element"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">PERSONAL DEINDIVIDUATION / LOST ACCOUNTABILITY</div>
+                </div>
+
+                <div id="box-8" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <path id="hysteria-loop-path" d="M20 50 A30 30 0 1 1 80 50 A30 30 0 1 1 20 50 Z" fill="none" class="stroke-element mania-element" stroke-width="3"/>
+                            <path id="hysteria-loop-arrow" d="M80 50 L75 53.5 L75 46.5 Z" fill="var(--glow-red)" class="mania-element" style="offset-path: path('M20 50 A30 30 0 1 1 80 50 A30 30 0 1 1 20 50 Z'); offset-distance: 0%;"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">ESCALATION & FEEDBACK LOOP / UNCONTROLLED HYSTERIA</div>
+                    <div class="small-text">[SELF-CONSUMING IRRATIONALITY]</div>
+                </div>
+
+                <div id="box-9" class="flow-box">
+                    <div class="box-icon">
+                        <svg viewBox="0 0 100 100">
+                            <rect id="aftermath-remnant-1" x="30" y="40" width="15" height="15" fill="#2a2a4a" class="crowd-element" opacity="0"/>
+                            <rect id="aftermath-remnant-2" x="55" y="55" width="15" height="15" fill="#2a2a4a" class="crowd-element" opacity="0"/>
+                            <circle id="aftermath-fading-glow" cx="50" cy="50" r="25" fill="var(--glow-red)" class="mania-element" opacity="0"/>
+                        </svg>
+                    </div>
+                    <div class="box-text">AFTERMATH / DISSIPATION OR LASTING IMPRINT</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="crowd-dynamics-log-panel" class="dashboard-panel">
+            <h2>CROWD DYNAMICS LOG</h2>
+            <div id="crowd-dynamics-log-text">
+                <p>Welcome to the Mass Mania Contagion Protocol Dashboard. This system analyzes the mechanisms behind the spread of collective irrationality and hysteria within a crowd.</p>
+                <p>Use the navigation controls below to observe each stage, from the initial individual anomaly to the chaotic aftermath.</p>
+                <p><strong>Status:</strong> Awaiting Diagnostic Input.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-controls">
+        <button id="prevBtn" disabled>PREVIOUS STAGE</button>
+        <button id="nextBtn">NEXT STAGE</button>
+        <p id="currentStepText">STAGE <span id="currentStepNumber">0</span> OF <span id="totalStepsNumber"></span></p>
+    </div>
+
+    <script>
+        const flowchartBoxes = [
+            null, // Step 0 is just initial state, no box highlighted
+            { id: 'box-1', arrow: null, description: '<h2>STAGE 1: INITIAL ANOMALY / INDIVIDUAL SEED</h2><p><strong>ANALYSIS:</strong> The initial spark. This can be a genuine but unusual event, a highly suggestible individual\'s exaggerated reaction, or even a deliberate misinformation campaign. It serves as the focal point for subsequent interpretation.</p><p><strong>OBSERVATIONS:</strong> A strange sound, an unexplained sight, a person acting erratically, a rumor spreading, a single dramatic statement.</p>' },
+            { id: 'box-2', arrow: 'arrow-1-2', description: '<h2>STAGE 2: AMBIGUITY & ANXIETY / CONTEXTUAL VULNERABILITY</h2><p><strong>ANALYSIS:</strong> A crowd in a state of uncertainty, stress, or heightened emotion is particularly susceptible. Ambiguous situations, combined with existing anxieties, create fertile ground for collective misinterpretation.</p><p><strong>OBSERVATIONS:</strong> Dense crowds, social unrest, economic hardship, natural disaster warnings, rumors, a lack of clear information, pre-existing group tension.</p>' },
+            { id: 'box-3', arrow: 'arrow-2-3', description: '<h2>STAGE 3: PERCEIVED THREAT / SHARED MISINTERPRETATION</h2><p><strong>ANALYSIS:</strong> The initial anomaly is misinterpreted by key individuals or early adopters as a real, immediate threat or significant event. This interpretation, however flawed, begins to be shared and gain traction within the vulnerable crowd.</p><p><strong>OBSERVATIONS:</strong> An unverified alarm, a shadow seen as an intruder, a cough heard as a symptom of disease, a simple statement twisted into a malicious accusation. The interpretation aligns with pre-existing fears.</p>' },
+            { id: 'box-4', arrow: 'arrow-3-6', description: '<h2>STAGE 4: SOCIAL CONTAGION / EMOTIONAL SPREAD</h2><p><strong>ANALYSIS:</strong> The misinterpreted threat and the accompanying emotions (fear, anger, excitement) rapidly spread through the crowd. This often happens non-verbally through mimicry, shared glances, and empathetic responses, creating a unified emotional state.</p><p><strong>OBSERVATIONS:</strong> Panic spreading through a concert, cheers escalating into a riot, rapid transmission of facial expressions and body language, mass belief in a false narrative without critical evaluation.</p>' },
+            { id: 'box-5', arrow: 'arrow-4-5', description: '<h2>STAGE 5: ECHO CHAMBER FORMATION / GROUP REINFORCEMENT</h2><p><strong>ANALYSIS:</strong> Within the aroused crowd, individuals seek validation for their shared belief. Contradictory information or dissenting voices are dismissed, ridiculed, or actively suppressed. The group\'s own internal narrative becomes the only accepted reality.</p><p><strong>OBSERVATIONS:</strong> Shouting down dissenters, selective hearing, filtering out external facts, reinforcing each other\'s anxieties or outrage, the formation of an "us vs. them" mentality.</p>' },
+            { id: 'box-6', arrow: 'arrow-5-6', description: '<h2>STAGE 6: IRRATIONAL ACT / COLLECTIVE CHAOS</h2><p><strong>ANALYSIS:</strong> Fueled by heightened emotions, shared (but false) beliefs, and group reinforcement, the crowd engages in behaviors that are illogical, disproportionate, or directly destructive. Individual rational thought is often suspended.</p><p><strong>OBSERVATIONS:</strong> Stampedes, looting, acts of vandalism, unprovoked aggression, mass protests turning violent, uncritical adherence to charismatic leaders, self-inflicted harm (e.g., dancing plagues).</p>' },
+            { id: 'box-7', arrow: 'arrow-6-9', description: '<h2>STAGE 7: PERSONAL DEINDIVIDUATION / LOST ACCOUNTABILITY</h2><p><strong>ANALYSIS:</strong> Individuals within the crowd lose their sense of personal identity and responsibility. They become anonymous, feeling less accountable for their actions and more likely to engage in behaviors they wouldn\'t as individuals.</p><p><strong>OBSERVATIONS:</strong> Masked individuals, large group anonymity, feeling like "just one of many," reduced self-awareness, a diffusion of moral responsibility, difficulty identifying perpetrators after the event.</p>' },
+            { id: 'box-8', arrow: 'arrow-7-8', description: '<h2>STAGE 8: ESCALATION & FEEDBACK LOOP / UNCONTROLLED HYSTERIA</h2><p><strong>ANALYSIS:</strong> The destructive or chaotic actions of the crowd further intensify the collective emotional state. Each new action or reaction fuels the next, creating a self-perpetuating cycle of uncontrolled hysteria, making external intervention extremely difficult.</p><p><strong>OBSERVATIONS:</strong> Actions becoming more extreme, increasingly violent rhetoric, a spiral of fear or aggression, complete loss of control, the "madness" consuming itself.</p>' },
+            { id: 'box-9', arrow: 'arrow-8-9', description: '<h2>STAGE 9: AFTERMATH / DISSIPATION OR LASTING IMPRINT</h2><p><strong>ANALYSIS:</strong> Eventually, the collective mania subsides due to exhaustion, external intervention, or the realization of the truth. However, the event leaves lasting consequences: physical damage, psychological trauma, social fragmentation, and a potential "scar" that can affect future crowd dynamics.</p><p><strong>OBSERVATIONS:</strong> Quiet exhaustion after a riot, widespread confusion, feelings of shame or regret, scapegoating, investigations, long-term social division, changes in public policy or security measures.</p>' },
+        ];
+
+        let currentStep = 0;
+        const totalSteps = flowchartBoxes.length - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const crowdDynamicsLogText = document.getElementById('crowd-dynamics-log-text');
+        const currentStepNumber = document.getElementById('currentStepNumber');
+        const totalStepsNumber = document.getElementById('totalStepsNumber');
+        const arrowheadPolygon = document.querySelector('#arrowhead .arrowhead-polygon');
+
+        totalStepsNumber.textContent = totalSteps;
+
+        // Function to reset all animations and dynamic styles
+        function resetAnimations() {
+            // General reset for all SVG elements within boxes
+            document.querySelectorAll('.box-icon svg *').forEach(el => {
+                el.style.animation = '';
+                el.style.filter = '';
+                el.style.transform = '';
+            });
+
+            // Specific opacity/visibility/state resets for elements that are hidden by default or fade in/out
+            // Box 1
+            document.getElementById('erratic-point').style.opacity = 1;
+            document.getElementById('erratic-point').style.filter = '';
+
+            // Box 2
+            document.getElementById('vulnerable-figure-1').style.transform = '';
+            document.getElementById('vulnerable-figure-2').style.transform = '';
+            document.getElementById('anxiety-q-mark').style.opacity = 0; // Reset to hidden
+
+            // Box 3
+            document.getElementById('threat-symbol').style.filter = '';
+
+            // Box 4
+            document.getElementById('contagion-arrow-1').style.opacity = 0; // Reset to hidden
+            document.getElementById('contagion-arrow-1').style.strokeDasharray = '0 100'; // Reset for next animation cycle
+            document.getElementById('contagion-arrow-2').style.opacity = 0; // Reset to hidden
+            document.getElementById('contagion-arrow-2').style.strokeDasharray = '0 100'; // Reset for next animation cycle
+            document.getElementById('contagion-figure-b').style.transform = '';
+            document.getElementById('contagion-figure-c').style.transform = '';
+
+            // Box 5
+            document.getElementById('echo-wave').style.d = 'path("M20 50 Q30 40 40 50 Q50 60 60 50 Q70 40 80 50")'; // Reset path 'd' attribute
+            document.getElementById('echo-figure-a').style.filter = '';
+            document.getElementById('echo-figure-b').style.filter = '';
+            document.getElementById('echo-figure-c').style.filter = '';
+
+            // Box 6
+            document.getElementById('chaos-center').style.filter = '';
+            // Fragments need to reset to their initial *visible* state before exploding again
+            document.getElementById('chaos-fragment-1').style.transform = 'translate(0,0) scale(1)';
+            document.getElementById('chaos-fragment-1').style.opacity = 1;
+            document.getElementById('chaos-fragment-2').style.transform = 'translate(0,0) scale(1)';
+            document.getElementById('chaos-fragment-2').style.opacity = 1;
+            document.getElementById('chaos-fragment-3').style.transform = 'translate(0,0) scale(1)';
+            document.getElementById('chaos-fragment-3').style.opacity = 1;
+            document.getElementById('chaos-fragment-4').style.transform = 'translate(0,0) scale(1)';
+            document.getElementById('chaos-fragment-4').style.opacity = 1;
+
+
+            // Box 7
+            document.getElementById('dissolving-figure').style.opacity = 1;
+            document.getElementById('dissolving-figure').style.filter = '';
+            document.getElementById('dissolving-figure').style.transform = '';
+
+            // Box 8 (Crucial fix here)
+            document.getElementById('hysteria-loop-path').style.strokeDashoffset = '';
+            document.getElementById('hysteria-loop-arrow').style.offsetDistance = '0%'; // Reset arrow to start of path
+
+            // Box 9
+            document.getElementById('aftermath-remnant-1').style.opacity = 0; // Reset to hidden
+            document.getElementById('aftermath-remnant-1').style.transform = '';
+            document.getElementById('aftermath-remnant-2').style.opacity = 0; // Reset to hidden
+            document.getElementById('aftermath-remnant-2').style.transform = '';
+            document.getElementById('aftermath-fading-glow').style.opacity = 0; // Reset to hidden
+            document.getElementById('aftermath-fading-glow').style.filter = '';
+        }
+
+        function updateFlowchart() {
+            // Remove highlight from all boxes and arrows first
+            document.querySelectorAll('.flow-box').forEach(box => box.classList.remove('highlight'));
+            document.querySelectorAll('.flow-arrow').forEach(arrow => {
+                arrow.classList.remove('highlight');
+                arrow.style.stroke = 'var(--text-medium)';
+            });
+            // Reset arrowhead color
+            arrowheadPolygon.style.fill = 'var(--text-medium)';
+
+            // Reset all icon animations before applying new ones
+            resetAnimations();
+
+            currentStepNumber.textContent = currentStep;
+
+            if (currentStep === 0) {
+                crowdDynamicsLogText.innerHTML = '<p>Welcome to the Mass Mania Contagion Protocol Dashboard. This system analyzes the mechanisms behind the spread of collective irrationality and hysteria within a crowd.</p><p>Use the navigation controls below to observe each stage, from the initial individual anomaly to the chaotic aftermath.</p><p><strong>Status:</strong> Awaiting Diagnostic Input.</p>';
+            } else {
+                const currentPhase = flowchartBoxes[currentStep];
+                // Highlight the current box
+                const currentBox = document.getElementById(currentPhase.id);
+                currentBox.classList.add('highlight');
+                
+                // Highlight the arrow *leading to* this step (if defined)
+                if (currentPhase.arrow) {
+                    const arrowElement = document.getElementById(currentPhase.arrow);
+                    arrowElement.classList.add('highlight');
+                    arrowElement.style.stroke = 'var(--glow-red)'; // Set arrow color
+                    arrowheadPolygon.style.fill = 'var(--glow-red)'; // Set arrowhead color
+                }
+                crowdDynamicsLogText.innerHTML = currentPhase.description;
+
+                // Trigger specific animations for the highlighted box's icon (elements that are initially hidden need to be made visible)
+                switch(currentPhase.id) {
+                    case 'box-1':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-2':
+                        document.getElementById('anxiety-q-mark').style.opacity = 1; // Make visible to start animation
+                        break;
+                    case 'box-3':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-4':
+                        document.getElementById('contagion-arrow-1').style.opacity = 1; // Make visible to start animation
+                        document.getElementById('contagion-arrow-2').style.opacity = 1; // Make visible to start animation
+                        break;
+                    case 'box-5':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-6':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-7':
+                        // Animations tied to CSS class highlight
+                        break;
+                    case 'box-8':
+                        // Animations tied to CSS class highlight (offset-distance is handled by CSS animation)
+                        break;
+                    case 'box-9':
+                        document.getElementById('aftermath-remnant-1').style.opacity = 1; // Make visible to start animation
+                        document.getElementById('aftermath-remnant-2').style.opacity = 1; // Make visible to start animation
+                        document.getElementById('aftermath-fading-glow').style.opacity = 1; // Make visible to start animation
+                        break;
+                }
+            }
+
+            // Update button states
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === totalSteps;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFlowchart();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFlowchart();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', updateFlowchart);
+    </script>
+</body>
+</html>
